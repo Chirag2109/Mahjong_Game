@@ -74,7 +74,10 @@ function generateTiles() {
     });
 }
 
-generateTiles();
+if (!localStorage.getItem('firstTimeLoad')) {
+    generateTiles();
+    localStorage.setItem('firstTimeLoad', 'true');
+}
 
 dragElement(document.getElementById("extra"));
 
@@ -113,3 +116,22 @@ function dragElement(elmnt) {
         document.onmousemove = null;
     }
 }
+
+const muteButton = document.getElementById('playButton');
+const muteIcon = document.getElementById('sound');
+const audio = document.getElementById('backgroundMusic');
+
+// Event listener to toggle mute
+muteButton.addEventListener('click', () => {
+    audio.muted = !audio.muted;
+
+    muteIcon.src = audio.muted ? 'mute.png' : 'sound.png';
+    muteIcon.alt = audio.muted ? 'Unmute' : 'Mute';
+});
+
+const restartButton = document.getElementById('reStart');
+
+// Event listener to refresh tiles
+restartButton.addEventListener('click', () => {
+    generateTiles();
+});

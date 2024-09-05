@@ -12,22 +12,25 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow: hidden;
     font-family: 'Great Vibes', 'Dancing Script', cursive;
-    background-color: var(--ivory);
+    background-image: url("https://getwallpapers.com/wallpaper/full/d/4/9/1320850-chinese-theme-wallpaper-1920x1166-ipad-pro.jpg");
 }
 
 h1 {
     text-align: center;
-    font-size: 100px;
-    color: var(--chinese-black);
+    font-size: 50px;
+    -webkit-text-stroke-width: 3px;
+    -webkit-text-stroke-color: var(--chinese-black);
+    color: var(--ivory);
 }
 
 .table-top {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin: 40px;
     padding: 20px;
+    border-radius: 25px;
     background-color: var(--jade-green);
     position: relative;
 }
@@ -77,4 +80,30 @@ h1 {
     font-weight: bold;
     cursor: pointer;
     color: var(--chinese-black);
+}
+
+#playButton {
+    background-color: var(--ivory);
+    border: none;
+    border-radius: 2px;
+    margin-top: 0;
+    margin-left: 60px;
+}
+
+#sound {
+    width: 25px;
+    height: 25px;
+}
+
+#reStart {
+    background-color: var(--ivory);
+    border: none;
+    border-radius: 2px;
+    margin-top: 0;
+    margin-left: 10px;
+}
+
+#start {
+    width: 25px;
+    height: 25px;
 }
