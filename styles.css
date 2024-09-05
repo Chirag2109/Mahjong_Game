@@ -1,12 +1,26 @@
+:root {
+    --imperial-red: #C8102E;
+    --gold: #FFD700;
+    --jade-green: #009B77;
+    --chinese-black: #101820;
+    --ivory: #FFFFF0;
+    --crimson: #DC143C;
+    --rich-burgundy: #6D2C91;
+}
+
 body {
-    font-family: 'Times New Roman', Times, serif;
-    background-color: rgb(140, 0, 0);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-family: 'Great Vibes', 'Dancing Script', cursive;
+    background-color: var(--ivory);
 }
 
 h1 {
     text-align: center;
     font-size: 100px;
-    font-family: 'Times New Roman', Times, serif;
+    color: var(--chinese-black);
 }
 
 .table-top {
@@ -14,40 +28,53 @@ h1 {
     justify-content: space-around;
     align-items: center;
     padding: 20px;
+    background-color: var(--jade-green);
+    position: relative;
 }
 
 .tile-set {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    color: red;
     gap: 15px;
     width: 600px;
-    height: 800px;
+    height: 600px;
     padding: 10px;
 }
 
 .extra-tile {
-    width: 62px;
-    height: 195px;
-    color: red;
+    width: 52px;
+    height: 138px;
+    border: 5px solid var(--rich-burgundy);
+    border-radius: 15px;
+    background-color: var(--ivory);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
     font-weight: bold;
+    cursor: move;
+    z-index: 10;
+    color: var(--chinese-black);
+}
+
+#extra {
+    position: absolute;
+    z-index: 9;
+    text-align: center;
 }
 
 .tile {
     width: 100%;
     height: 100%;
-    border: 5px solid red;
+    border: 5px solid var(--rich-burgundy);
     border-radius: 15px;
-    background-color: white;
+    background-color: var(--ivory);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
+    color: var(--chinese-black);
 }
