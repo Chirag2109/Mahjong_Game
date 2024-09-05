@@ -24,6 +24,10 @@ h1 {
     color: var(--ivory);
 }
 
+#Table {
+    display: block;
+}
+
 .table-top {
     display: flex;
     justify-content: space-around;
@@ -106,4 +110,28 @@ h1 {
 #start {
     width: 25px;
     height: 25px;
+}
+
+.loader {
+    position: fixed;
+    top: 45%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    border: 16px solid var(--ivory);
+    border-top: 16px solid var(--jade-green);
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

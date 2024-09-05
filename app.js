@@ -3,6 +3,7 @@ const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 let temp = [];
 
+// Shuffle function remains the same
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -11,74 +12,110 @@ function shuffle(array) {
     return array;
 }
 
-function generateTiles() {
+// Function to generate or load tiles from localStorage
+function generateOrLoadTiles() {
     let set1 = document.getElementById('set1');
     let set2 = document.getElementById('set2');
+    let Table = document.getElementById('Table');
     let extraTileContainer = document.getElementById('extraTile');
 
+    // Check if tiles are already saved in localStorage
+    let savedTiles = localStorage.getItem('tiles');
+    if (savedTiles) {
+        const tilesData = JSON.parse(savedTiles);
+        const { set1Array, set2Array, extraTile } = tilesData;
 
-    set1.innerHTML = '';
-    set2.innerHTML = '';
-    extraTileContainer.innerHTML = '';
+        // Load the saved tiles
+        set1Array.forEach(tile => {
+            let tileDiv = document.createElement('div');
+            tileDiv.classList.add('tile');
+            tileDiv.innerText = tile.name;
+            set1.appendChild(tileDiv);
+        });
 
+        set2Array.forEach(tile => {
+            let tileDiv = document.createElement('div');
+            tileDiv.classList.add('tile');
+            tileDiv.innerText = tile.name;
+            set2.appendChild(tileDiv);
+        });
 
-    for (let i = 0; i < symbols.length; i++) {
-        for (let j = 0; j < 4; j++) {
-            let tile = {
-                name: symbols[i],
-                img: symbols[i],
-                category: "symbol"
-            };
-            temp.push(tile);
+        // Load the extra tile
+        let extraTileDiv = document.createElement('div');
+        extraTileDiv.innerText = extraTile.name;
+        extraTileContainer.appendChild(extraTileDiv);
+
+    } else {
+        // Generate new tiles if none are saved
+        temp = [];
+
+        for (let i = 0; i < symbols.length; i++) {
+            for (let j = 0; j < 4; j++) {
+                let tile = {
+                    name: symbols[i],
+                    img: symbols[i],
+                    category: "symbol"
+                };
+                temp.push(tile);
+            }
         }
-    }
 
-    for (let i = 0; i < numbers.length; i++) {
-        for (let j = 0; j < 4; j++) {
-            let tile = {
-                name: numbers[i],
-                img: numbers[i],
-                category: "number"
-            };
-            temp.push(tile);
+        for (let i = 0; i < numbers.length; i++) {
+            for (let j = 0; j < 4; j++) {
+                let tile = {
+                    name: numbers[i],
+                    img: numbers[i],
+                    category: "number"
+                };
+                temp.push(tile);
+            }
         }
+
+        let shuffledTemp = shuffle(temp);
+
+        let set1Array = shuffledTemp.slice(0, 36);
+        let set2Array = shuffledTemp.slice(36, 72);
+
+        // Add tiles to set 1
+        set1Array.forEach(tile => {
+            let tileDiv = document.createElement('div');
+            tileDiv.classList.add('tile');
+            tileDiv.innerText = tile.name;
+            set1.appendChild(tileDiv);
+        });
+
+        // Random extra tile
+        let randomTile = shuffledTemp[Math.floor(Math.random() * shuffledTemp.length)];
+        let extraTileDiv = document.createElement('div');
+        extraTileDiv.innerText = randomTile.name;
+        extraTileContainer.appendChild(extraTileDiv);
+
+        // Add tiles to set 2
+        set2Array.forEach(tile => {
+            let tileDiv = document.createElement('div');
+            tileDiv.classList.add('tile');
+            tileDiv.innerText = tile.name;
+            set2.appendChild(tileDiv);
+        });
+
+        // Save the tile configuration in localStorage
+        const tileData = {
+            set1Array,
+            set2Array,
+            extraTile: randomTile
+        };
+        localStorage.setItem('tiles', JSON.stringify(tileData));
     }
-
-
-    let shuffledTemp = shuffle(temp);
-
-
-    let set1Array = shuffledTemp.slice(0, 36);
-    let set2Array = shuffledTemp.slice(36, 72);
-
-
-    set1Array.forEach(tile => {
-        let tileDiv = document.createElement('div');
-        tileDiv.classList.add('tile');
-        tileDiv.innerText = tile.name;
-        set1.appendChild(tileDiv);
-    });
-
-
-    let randomTile = shuffledTemp[Math.floor(Math.random() * shuffledTemp.length)];
-    let extraTileDiv = document.createElement('div');
-    extraTileDiv.innerText = randomTile.name;
-    extraTileContainer.appendChild(extraTileDiv);
-
-
-    set2Array.forEach(tile => {
-        let tileDiv = document.createElement('div');
-        tileDiv.classList.add('tile');
-        tileDiv.innerText = tile.name;
-        set2.appendChild(tileDiv);
-    });
+    setTimeout(() => {
+        loader.style.display = 'none';
+        Table.style.display = 'block';
+    }, 10000);
 }
 
-if (!localStorage.getItem('firstTimeLoad')) {
-    generateTiles();
-    localStorage.setItem('firstTimeLoad', 'true');
-}
+// Run the function on page load
+generateOrLoadTiles();
 
+// Drag functionality for the extra tile
 dragElement(document.getElementById("extra"));
 
 function dragElement(elmnt) {
@@ -117,21 +154,54 @@ function dragElement(elmnt) {
     }
 }
 
+// Mute button functionality
 const muteButton = document.getElementById('playButton');
 const muteIcon = document.getElementById('sound');
 const audio = document.getElementById('backgroundMusic');
 
+// Function to update the mute status
+function updateMuteStatus() {
+    const isMuted = localStorage.getItem('audioMuted') === 'true';
+    audio.muted = isMuted;
+    muteIcon.src = isMuted ? 'mute.png' : 'sound.png';
+    muteIcon.alt = isMuted ? 'Unmute' : 'Mute';
+}
+
 // Event listener to toggle mute
 muteButton.addEventListener('click', () => {
     audio.muted = !audio.muted;
-
     muteIcon.src = audio.muted ? 'mute.png' : 'sound.png';
     muteIcon.alt = audio.muted ? 'Unmute' : 'Mute';
+
+    // Save the mute status to localStorage
+    localStorage.setItem('audioMuted', audio.muted);
 });
 
-const restartButton = document.getElementById('reStart');
+// Initialize the mute status when the page loads
+window.addEventListener('load', updateMuteStatus);
 
-// Event listener to refresh tiles
+// Event listener to refresh tiles (clearing storage for a new shuffle)
+const restartButton = document.getElementById('reStart');
+const loader = document.getElementById('loader');
+const table = document.getElementById('Table');
+
 restartButton.addEventListener('click', () => {
-    generateTiles();
+    loader.style.display = 'block';
+    table.style.display = 'none';
+
+    localStorage.removeItem('tiles');
+
+    const minDisplayTime = 3000;
+    const startTime = Date.now();
+
+    function reloadAfterDelay() {
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(minDisplayTime - elapsedTime, 0);
+
+        setTimeout(() => {
+            window.location.reload();
+            generateOrLoadTiles();
+        }, remainingTime);
+    }
+    reloadAfterDelay();
 });

@@ -11,18 +11,21 @@
 </head>
 
 <body>
-    <audio id="backgroundMusic" autoplay loop>
-        <source src="asian-chinese-cinematic-ambient-traditional-ethnic-oriental-175674.mp3" type="audio/mpeg" />
-    </audio>
     <h1>Welcome to the Mahjong Board!</h1>
-    <button id="playButton"><img src="sound.png" alt="Mute" id="sound"></button>
-    <button id="reStart"><img src="rotate.png" alt="Restart" id="start"></button>
-    <div class="table-top">
-        <div class="tile-set" id="set1"></div>
-        <div id="extra">
-            <div class="extra-tile" id="extraTile"></div>
+    <div id="loader" class="loader"></div>
+    <div id="Table">
+        <audio id="backgroundMusic" autoplay loop>
+            <source src="TunePocket-Chinese-Tiger-Celebration-Preview.mp3" type="audio/mpeg" />
+        </audio>
+        <button id="playButton"><img src="sound.png" alt="Mute" id="sound"></button>
+        <button id="reStart"><img src="rotate.png" alt="Restart" id="start"></button>
+        <div class="table-top">
+            <div class="tile-set" id="set1"></div>
+            <div id="extra">
+                <div class="extra-tile" id="extraTile"></div>
+            </div>
+            <div class="tile-set" id="set2"></div>
         </div>
-        <div class="tile-set" id="set2"></div>
     </div>
     <script src="app.js"></script>
 </body>

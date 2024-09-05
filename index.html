@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chinese Traditional Entrance</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="play" onclick="window.open('home.html', '_blank')">Play</button>
+    <audio autoplay muted loop>
+        <source src="melody-of-nature-main(chosic.com).mp3" type="audio/mpeg" />
+    </audio>
+    <div class="container" id="container">
+        <div class="entrance">
+            <h1>Welcome to the Chinese Traditional Experience</h1>
+            <p>Click the button below to enter.</p>
+            <button id="play">PLAY</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
