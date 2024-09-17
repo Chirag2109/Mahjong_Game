@@ -14,14 +14,16 @@ body {
     box-sizing: border-box;
     font-family: 'Great Vibes', 'Dancing Script', cursive;
     background-image: url("https://getwallpapers.com/wallpaper/full/d/4/9/1320850-chinese-theme-wallpaper-1920x1166-ipad-pro.jpg");
+    background-size: cover;
 }
 
 h1 {
     text-align: center;
-    font-size: 50px;
+    font-size: 45px;
     -webkit-text-stroke-width: 3px;
     -webkit-text-stroke-color: var(--chinese-black);
     color: var(--ivory);
+    text-shadow: 2px 2px 5px var(--rich-burgundy);
 }
 
 #Table {
@@ -37,6 +39,7 @@ h1 {
     border-radius: 25px;
     background-color: var(--jade-green);
     position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .tile-set {
@@ -46,12 +49,12 @@ h1 {
     gap: 15px;
     width: 600px;
     height: 600px;
-    padding: 10px;
+    padding: 0px;
 }
 
 .extra-tile {
     width: 52px;
-    height: 138px;
+    height: 135px;
     border: 5px solid var(--rich-burgundy);
     border-radius: 15px;
     background-color: var(--ivory);
@@ -63,6 +66,18 @@ h1 {
     cursor: move;
     z-index: 10;
     color: var(--chinese-black);
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.extra-tile:active {
+    opacity: 0.7;
+}
+
+.extra-tile:hover {
+    border-color: var(--gold);
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
 }
 
 #extra {
@@ -84,6 +99,55 @@ h1 {
     font-weight: bold;
     cursor: pointer;
     color: var(--chinese-black);
+    transition: transform 0.6s, color 0.6s, background-color 0.6s;
+    transform: rotateY(180deg);
+}
+
+.tile:hover {
+    transform: rotateY(0deg);
+    background-color: var(--ivory);
+    color: var(--chinese-black);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.tile::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background-color: var(--rich-burgundy);
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 15px;
+    transform: rotateY(0deg);
+    backface-visibility: hidden;
+    transition: transform 0.6s;
+}
+
+.tile:hover::before {
+    transform: rotateY(180deg);
+}
+
+/* .tile {
+    width: 100%;
+    height: 100%;
+    border: 5px solid var(--rich-burgundy);
+    border-radius: 15px;
+    background-color: var(--ivory);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--chinese-black);
+    transition: box-shadow 0.3s, transform 0.2s;
+} */
+
+.tile:focus, .tile:hover {
+    border-color: var(--gold);
+    outline: none;
 }
 
 #playButton {
@@ -92,6 +156,15 @@ h1 {
     border-radius: 2px;
     margin-top: 0;
     margin-left: 60px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#playButton:hover {
+    background-color: var(--jade-green);
+    color: var(--ivory);
 }
 
 #sound {
@@ -105,6 +178,15 @@ h1 {
     border-radius: 2px;
     margin-top: 0;
     margin-left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#reStart:hover {
+    background-color: var(--jade-green);
+    color: var(--ivory);
 }
 
 #start {
@@ -124,14 +206,35 @@ h1 {
     height: 120px;
     animation: spin 2s linear infinite;
     display: none;
+    box-shadow: 0 0 20px var(--gold);
 }
 
 @keyframes spin {
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 600px) {
+    .tile-set {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .tile, .extra-tile {
+        width: 40px;
+        height: 100px;
+    }
+
+    #playButton, #reStart {
+        margin-left: 0;
+    }
+
+    h1 {
+        font-size: 35px;
     }
 }
