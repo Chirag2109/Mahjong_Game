@@ -73,8 +73,8 @@ function generateTiles() {
     let shuffledTemp = shuffle(temp);
 
     // Convert the shuffled array into two 9x4 2D arrays (set1Array and set2Array)
-    let set1Array = [];
-    let set2Array = [];
+    let set1Array = [[]];
+    let set2Array = [[]];
 
     for (let i = 0; i < 36; i += 9) {
         set1Array.push(shuffledTemp.slice(i, i + 9));
@@ -144,60 +144,60 @@ function dragElement(elmnt) {
     }
 }
 
-// // Check which column the extra tile was dropped on
-// function checkDropColumn(extraTile) {
-//     const tileSets = [document.getElementById('set1'), document.getElementById('set2')];
-//     let dropped = false;
+// Check which column the extra tile was dropped on
+function checkDropColumn(extraTile) {
+    const tileSets = [document.getElementById('set1'), document.getElementById('set2')];
+    let dropped = false;
 
-//     tileSets.forEach((set, setIndex) => {
-//         const columns = set.children;
-//         Array.from(columns).forEach((tile, index) => {
-//             const rect = tile.getBoundingClientRect();
+    tileSets.forEach((set, setIndex) => {
+        const columns = set.children;
+        Array.from(columns).forEach((tile, index) => {
+            const rect = tile.getBoundingClientRect();
 
-//             // Check if the extra tile was dropped in this column's bounds
-//             if (extraTile.offsetLeft >= rect.left && extraTile.offsetLeft <= rect.right &&
-//                 extraTile.offsetTop >= rect.top && extraTile.offsetTop <= rect.bottom) {
+            // Check if the extra tile was dropped in this column's bounds
+            if (extraTile.offsetLeft >= rect.left && extraTile.offsetLeft <= rect.right &&
+                extraTile.offsetTop >= rect.top && extraTile.offsetTop <= rect.bottom) {
                 
-//                 shiftColumn(setIndex, index);
-//                 dropped = true;
-//             }
-//         });
-//     });
+                shiftColumn(setIndex, index);
+                dropped = true;
+            }
+        });
+    });
 
-//     // Reset position if not dropped on a valid column
-//     if (!dropped) {
-//         extraTile.style.top = "0px";
-//         extraTile.style.left = "0px";
-//     }
-// }
+    // Reset position if not dropped on a valid column
+    if (!dropped) {
+        extraTile.style.top = "0px";
+        extraTile.style.left = "0px";
+    }
+}
 
-// // Shift the tiles in the specified column down and update localStorage
-// function shiftColumn(setIndex, colIndex) {
-//     const tileData = JSON.parse(localStorage.getItem('tiles'));
-//     const { set1Array, set2Array, extraTile } = tileData;
+// Shift the tiles in the specified column down and update localStorage
+function shiftColumn(setIndex, colIndex) {
+    const tileData = JSON.parse(localStorage.getItem('tiles'));
+    const { set1Array, set2Array, extraTile } = tileData;
 
-//     let setArray = setIndex === 0 ? set1Array : set2Array;
-//     let columnTiles = Array.from(document.getElementById(`set${setIndex + 1}`).children);
+    let setArray = setIndex === 0 ? set1Array : set2Array;
+    let columnTiles = Array.from(document.getElementById(`set${setIndex + 1}`).children);
 
-//     // Shift tiles down in the selected column
-//     let shiftedTile = setArray[colIndex];
-//     for (let i = colIndex; i < setArray.length - 1; i++) {
-//         setArray[i] = setArray[i + 1];
-//         columnTiles[i].innerText = setArray[i].name;
-//     }
+    // Shift tiles down in the selected column
+    let shiftedTile = setArray[colIndex];
+    for (let i = colIndex; i < setArray.length - 1; i++) {
+        setArray[i] = setArray[i + 1];
+        columnTiles[i].innerText = setArray[i].name;
+    }
 
-//     // The last tile in the column becomes the new extra tile
-//     let newExtraTile = setArray[setArray.length - 1];
-//     document.getElementById('extraTile').innerText = shiftedTile.name;
+    // The last tile in the column becomes the new extra tile
+    let newExtraTile = setArray[setArray.length - 1];
+    document.getElementById('extraTile').innerText = shiftedTile.name;
 
-//     // Update localStorage
-//     const updatedTileData = {
-//         set1Array: setIndex === 0 ? setArray : set1Array,
-//         set2Array: setIndex === 1 ? setArray : set2Array,
-//         extraTile: newExtraTile
-//     };
-//     localStorage.setItem('tiles', JSON.stringify(updatedTileData));
-// }
+    // Update localStorage
+    const updatedTileData = {
+        set1Array: setIndex === 0 ? setArray : set1Array,
+        set2Array: setIndex === 1 ? setArray : set2Array,
+        extraTile: newExtraTile
+    };
+    localStorage.setItem('tiles', JSON.stringify(updatedTileData));
+}
 
 // Initialize
 generateOrLoadTiles();
