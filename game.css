@@ -8,38 +8,67 @@
     --rich-burgundy: #6D2C91;
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap");
+
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Great Vibes', 'Dancing Script', cursive;
-    background-image: url("https://getwallpapers.com/wallpaper/full/d/4/9/1320850-chinese-theme-wallpaper-1920x1166-ipad-pro.jpg");
+    background-image: url("/wallpaper/game.jpeg");
     background-size: cover;
 }
 
-h1 {
-    text-align: center;
-    font-size: 45px;
-    -webkit-text-stroke-width: 3px;
-    -webkit-text-stroke-color: var(--chinese-black);
-    color: var(--ivory);
-    text-shadow: 2px 2px 5px var(--rich-burgundy);
+/* Navbar styling */
+.navbar {
+    background-color: var(--imperial-red);
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    height: 30px;
+    z-index: -1;
 }
 
-#Table {
-    display: block;
+/* Container for navbar elements */
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+/* Navbar button styling */
+.navbar-button {
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+/* Image styling for buttons */
+.navbar-button img {
+    width: 24px;
+    height: 24px;
+}
+
+.avatar {
+    display: flex;
+    justify-content: center;
+}
+
+.avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
 }
 
 .table-top {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    margin: 40px;
-    padding: 20px;
+    gap: 100px;
+    top: 100px;
     border-radius: 25px;
-    background-color: var(--jade-green);
     position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .tile-set {
@@ -49,13 +78,12 @@ h1 {
     gap: 15px;
     width: 600px;
     height: 600px;
-    padding: 0px;
 }
 
 .extra-tile {
     width: 52px;
     height: 135px;
-    border: 5px solid var(--rich-burgundy);
+    border: 5px solid var(--jade-green);
     border-radius: 15px;
     background-color: var(--ivory);
     display: flex;
@@ -89,7 +117,7 @@ h1 {
 .tile {
     width: 100%;
     height: 100%;
-    border: 5px solid var(--rich-burgundy);
+    border: 5px solid var(--jade-green);
     border-radius: 15px;
     background-color: var(--ivory);
     display: flex;
@@ -115,7 +143,7 @@ h1 {
     content: '';
     width: 100%;
     height: 100%;
-    background-color: var(--rich-burgundy);
+    background-color: var(--jade-green);
     position: absolute;
     top: 0;
     left: 0;
@@ -134,8 +162,18 @@ h1 {
     outline: none;
 }
 
+/* CSS for tile movement */
+.tile {
+    position: relative;
+    transition: transform 0.5s ease;
+}
+
+/* Class to move tiles down */
+.tile.move-down {
+    transform: translateY(100%);
+}
+
 #playButton {
-    background-color: var(--ivory);
     border: none;
     border-radius: 2px;
     margin-top: 0;
@@ -147,7 +185,7 @@ h1 {
 }
 
 #playButton:hover {
-    background-color: var(--jade-green);
+    background-color: var(--crimson);
     color: var(--ivory);
 }
 
@@ -157,7 +195,6 @@ h1 {
 }
 
 #reStart {
-    background-color: var(--ivory);
     border: none;
     border-radius: 2px;
     margin-top: 0;
@@ -169,7 +206,7 @@ h1 {
 }
 
 #reStart:hover {
-    background-color: var(--jade-green);
+    background-color: var(--crimson);
     color: var(--ivory);
 }
 
@@ -184,7 +221,7 @@ h1 {
     left: 45%;
     transform: translate(-50%, -50%);
     border: 16px solid var(--ivory);
-    border-top: 16px solid var(--jade-green);
+    border-top: 16px solid var(--rich-burgundy);
     border-radius: 50%;
     width: 120px;
     height: 120px;
@@ -199,26 +236,5 @@ h1 {
     }
     100% {
         transform: rotate(360deg);
-    }
-}
-
-@media (max-width: 600px) {
-    .tile-set {
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        gap: 10px;
-    }
-
-    .tile, .extra-tile {
-        width: 40px;
-        height: 100px;
-    }
-
-    #playButton, #reStart {
-        margin-left: 0;
-    }
-
-    h1 {
-        font-size: 35px;
     }
 }

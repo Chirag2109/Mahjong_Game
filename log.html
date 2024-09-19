@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Players Sign-Up and Login</title>
+    <link rel="stylesheet" href="log.css">
+</head>
+<body>
+    <div class="container">
+        <div class="player-section">
+            <div id="player1-signup-container" class="form-container">
+                <div class="avatar">
+                    <img src="/logo/chinese.png" alt="Player 1 Avatar">
+                </div>
+                <h2>Player 1 Sign-Up</h2>
+                <form id="player1-signup-form">
+                    <label for="player1-signup-username">Username:</label>
+                    <input type="text" id="player1-signup-username" name="username" required>
+                    
+                    <label for="player1-signup-password">Password:</label>
+                    <input type="password" id="player1-signup-password" name="password" required autocomplete="new-password">
+                    
+                    <button type="submit">Sign Up</button>
+                </form>
+                <button id="player1-switch-to-login">Already have an account? Login</button>
+            </div>
+
+            <div id="player1-login-container" class="form-container hidden">
+                <div class="avatar">
+                    <img src="/logo/chinese.png" alt="Player 1 Avatar">
+                </div>
+                <h2>Player 1 Login</h2>
+                <form id="player1-login-form">
+                    <label for="player1-login-username">Username:</label>
+                    <input type="text" id="player1-login-username" name="username" required>
+                    
+                    <label for="player1-login-password">Password:</label>
+                    <input type="password" id="player1-login-password" name="password" required autocomplete="current-password">
+                    
+                    <button type="submit">Login</button>
+                </form>
+                <button id="player1-switch-to-signup">Don't have an account? Sign Up</button>
+            </div>
+        </div>
+
+        <div class="vs-symbol">
+            <h1>VS</h1>
+        </div>
+
+        <div class="player-section">
+            <div id="player2-signup-container" class="form-container">
+                <div class="avatar">
+                    <img src="/logo/woman.png" alt="Player 2 Avatar">
+                </div>
+                <h2>Player 2 Sign-Up</h2>
+                <form id="player2-signup-form">
+                    <label for="player2-signup-username">Username:</label>
+                    <input type="text" id="player2-signup-username" name="username" required>
+                    
+                    <label for="player2-signup-password">Password:</label>
+                    <input type="password" id="player2-signup-password" name="password" required autocomplete="new-password">
+                    
+                    <button type="submit">Sign Up</button>
+                </form>
+                <button id="player2-switch-to-login">Already have an account? Login</button>
+            </div>
+
+            <div id="player2-login-container" class="form-container hidden">
+                <div class="avatar">
+                    <img src="/logo/woman.png" alt="Player 2 Avatar">
+                </div>
+                <h2>Player 2 Login</h2>
+                <form id="player2-login-form">
+                    <label for="player2-login-username">Username:</label>
+                    <input type="text" id="player2-login-username" name="username" required>
+                    
+                    <label for="player2-login-password">Password:</label>
+                    <input type="password" id="player2-login-password" name="password" required autocomplete="current-password">
+                    
+                    <button type="submit">Login</button>
+                </form>
+                <button id="player2-switch-to-signup">Don't have an account? Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="log.js"></script>
+</body>
+</html>

@@ -1,7 +1,8 @@
+// Define symbols and numbers
 const symbols = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
 const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-// Shuffle function remains the same
+// Shuffle function
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -10,7 +11,7 @@ function shuffle(array) {
     return array;
 }
 
-// Function to generate or load tiles from localStorage
+// Generate or load tiles from localStorage
 function generateOrLoadTiles() {
     let set1 = document.getElementById('set1');
     let set2 = document.getElementById('set2');
@@ -21,33 +22,29 @@ function generateOrLoadTiles() {
         const tilesData = JSON.parse(savedTiles);
         const { set1Array, set2Array, extraTile } = tilesData;
 
-        // Load the saved tiles into set1
-        set1Array.forEach(row => {
-            row.forEach(tile => {
-                let tileDiv = document.createElement('div');
-                tileDiv.classList.add('tile');
-                tileDiv.innerText = tile.name;
-                set1.appendChild(tileDiv);
-            });
-        });
-
-        // Load the saved tiles into set2
-        set2Array.forEach(row => {
-            row.forEach(tile => {
-                let tileDiv = document.createElement('div');
-                tileDiv.classList.add('tile');
-                tileDiv.innerText = tile.name;
-                set2.appendChild(tileDiv);
-            });
-        });
+        // Load the saved tiles into set1 and set2
+        loadTiles(set1, set1Array);
+        loadTiles(set2, set2Array);
 
         // Load the extra tile
         extraTileContainer.innerText = extraTile.name;
 
     } else {
-        // If no saved tiles, generate them
         generateTiles();
     }
+}
+
+// Helper function to load tiles into the DOM
+function loadTiles(container, tileArray) {
+    container.innerHTML = ""; // Clear any existing tiles
+    tileArray.forEach(row => {
+        row.forEach(tile => {
+            let tileDiv = document.createElement('div');
+            tileDiv.classList.add('tile');
+            tileDiv.innerText = tile.name;
+            container.appendChild(tileDiv);
+        });
+    });
 }
 
 // Generate new tiles and save them in localStorage as 2D arrays
@@ -57,58 +54,28 @@ function generateTiles() {
     let extraTileContainer = document.getElementById('extraTile');
 
     let temp = [];
-    for (let i = 0; i < symbols.length; i++) {
-        for (let j = 0; j < 4; j++) {
-            let tile = { name: symbols[i] };
-            temp.push(tile);
-        }
-    }
-    for (let i = 0; i < numbers.length; i++) {
-        for (let j = 0; j < 4; j++) {
-            let tile = { name: numbers[i] };
-            temp.push(tile);
-        }
-    }
+    symbols.forEach(symbol => {
+        for (let i = 0; i < 4; i++) temp.push({ name: symbol });
+    });
+    numbers.forEach(number => {
+        for (let i = 0; i < 4; i++) temp.push({ name: number });
+    });
 
     let shuffledTemp = shuffle(temp);
+    let set1Array = [], set2Array = [];
 
-    // Convert the shuffled array into two 9x4 2D arrays (set1Array and set2Array)
-    let set1Array = [[]];
-    let set2Array = [[]];
+    // Split shuffled tiles into two sets
+    for (let i = 0; i < 36; i += 9) set1Array.push(shuffledTemp.slice(i, i + 9));
+    for (let i = 36; i < 72; i += 9) set2Array.push(shuffledTemp.slice(i, i + 9));
 
-    for (let i = 0; i < 36; i += 9) {
-        set1Array.push(shuffledTemp.slice(i, i + 9));
-    }
-
-    for (let i = 36; i < 72; i += 9) {
-        set2Array.push(shuffledTemp.slice(i, i + 9));
-    }
-
-    // Add tiles to set1
-    set1Array.forEach(row => {
-        row.forEach(tile => {
-            let tileDiv = document.createElement('div');
-            tileDiv.classList.add('tile');
-            tileDiv.innerText = tile.name;
-            set1.appendChild(tileDiv);
-        });
-    });
-
-    // Add tiles to set2
-    set2Array.forEach(row => {
-        row.forEach(tile => {
-            let tileDiv = document.createElement('div');
-            tileDiv.classList.add('tile');
-            tileDiv.innerText = tile.name;
-            set2.appendChild(tileDiv);
-        });
-    });
+    // Add tiles to set1 and set2
+    loadTiles(set1, set1Array);
+    loadTiles(set2, set2Array);
 
     // Random extra tile
     let randomTile = shuffledTemp[Math.floor(Math.random() * shuffledTemp.length)];
     extraTileContainer.innerText = randomTile.name;
 
-    // Save the tile data in 2D arrays to localStorage
     const tileData = { set1Array, set2Array, extraTile: randomTile };
     localStorage.setItem('tiles', JSON.stringify(tileData));
 }
@@ -140,11 +107,11 @@ function dragElement(elmnt) {
     function closeDragElement() {
         document.onmouseup = null;
         document.onmousemove = null;
-        // checkDropColumn(elmnt);
+        checkDropColumn(elmnt);
     }
 }
 
-// Check which column the extra tile was dropped on
+// Check where the extra tile was dropped and trigger tile shifting
 function checkDropColumn(extraTile) {
     const tileSets = [document.getElementById('set1'), document.getElementById('set2')];
     let dropped = false;
@@ -154,21 +121,14 @@ function checkDropColumn(extraTile) {
         Array.from(columns).forEach((tile, index) => {
             const rect = tile.getBoundingClientRect();
 
-            // Check if the extra tile was dropped in this column's bounds
-            if (extraTile.offsetLeft >= rect.left && extraTile.offsetLeft <= rect.right &&
-                extraTile.offsetTop >= rect.top && extraTile.offsetTop <= rect.bottom) {
-                
-                shiftColumn(setIndex, index);
+            // If the extra tile was dropped within the bounds of this column
+            if (extraTile.offsetLeft >= rect.left && extraTile.offsetLeft <= rect.right && extraTile.offsetTop >= rect.top && extraTile.offsetTop <= rect.bottom)
+            {
+                shiftColumn(setIndex, index % 9); // Shift tiles in the detected column
                 dropped = true;
             }
         });
     });
-
-    // Reset position if not dropped on a valid column
-    if (!dropped) {
-        extraTile.style.top = "0px";
-        extraTile.style.left = "0px";
-    }
 }
 
 // Shift the tiles in the specified column down and update localStorage
@@ -179,27 +139,42 @@ function shiftColumn(setIndex, colIndex) {
     let setArray = setIndex === 0 ? set1Array : set2Array;
     let columnTiles = Array.from(document.getElementById(`set${setIndex + 1}`).children);
 
-    // Shift tiles down in the selected column
-    let shiftedTile = setArray[colIndex];
-    for (let i = colIndex; i < setArray.length - 1; i++) {
-        setArray[i] = setArray[i + 1];
-        columnTiles[i].innerText = setArray[i].name;
-    }
+    // Get the column to shift down
+    let shiftedTile = setArray.map(row => row[colIndex]);
+    let lastTile = shiftedTile.pop(); // Remove the last tile
+    shiftedTile.unshift(extraTile); // Insert extra tile at the top
 
-    // The last tile in the column becomes the new extra tile
-    let newExtraTile = setArray[setArray.length - 1];
-    document.getElementById('extraTile').innerText = shiftedTile.name;
+    // Apply downward movement animation to each tile
+    shiftedTile.forEach((tileName, rowIndex) => {
+        const tileElement = columnTiles[rowIndex * 9 + colIndex];
+        tileElement.classList.add('move-down');
+    });
 
-    // Update localStorage
-    const updatedTileData = {
-        set1Array: setIndex === 0 ? setArray : set1Array,
-        set2Array: setIndex === 1 ? setArray : set2Array,
-        extraTile: newExtraTile
-    };
-    localStorage.setItem('tiles', JSON.stringify(updatedTileData));
+    // After the animation, update the tiles in the DOM and localStorage
+    setTimeout(() => {
+        shiftedTile.forEach((tileName, rowIndex) => {
+            const tileElement = columnTiles[rowIndex * 9 + colIndex];
+            tileElement.classList.remove('move-down');
+            tileElement.innerText = tileName.name;
+        });
+
+        document.getElementById('extraTile').innerText = lastTile.name;
+
+        setArray.forEach((row, rowIndex) => {
+            row[colIndex] = shiftedTile[rowIndex];
+        });
+
+        const updatedTileData = {
+            set1Array: setIndex === 0 ? setArray : set1Array,
+            set2Array: setIndex === 1 ? setArray : set2Array,
+            extraTile: lastTile
+        };
+
+        localStorage.setItem('tiles', JSON.stringify(updatedTileData));
+    }, 500); // 0.5s wait for the animation to complete
 }
 
-// Initialize
+// Initialize the board and tiles
 generateOrLoadTiles();
 
 // Mute button functionality
