@@ -36,26 +36,35 @@ function generateOrLoadTiles() {
 
 // Helper function to load tiles into the DOM
 function loadTiles(container, tileArray) {
-    container.innerHTML = ""; // Clear any existing tiles
+    container.innerHTML = "";
     tileArray.forEach(row => {
         row.forEach(tile => {
             let tileDiv = document.createElement('div');
             tileDiv.classList.add('tile');
-            tileDiv.innerText = tile.name;
+            tileDiv.setAttribute('data-name', tile.name);
+            tileDiv.classList.toggle('flip', tile.flipped === false);
             container.appendChild(tileDiv);
         });
     });
 }
 
-let previousStates = [];
+// Initialize previous states from localStorage or set an empty array
+let previousStates = JSON.parse(localStorage.getItem('previousStates')) || [];
 
 // Save the current state before any major change
 function saveCurrentState() {
     const currentState = localStorage.getItem('tiles');
-    previousStates.push(currentState); // Save the state to the stack
-    if (previousStates.length > 10) { // Limit the stack size if necessary
-        previousStates.shift(); // Remove the oldest state if the stack exceeds 10
+
+    // Save the state in memory and in localStorage
+    previousStates.push(currentState);
+
+    // Limit the number of stored states to 10 (adjustable)
+    if (previousStates.length > 10) {
+        previousStates.shift(); // Remove the oldest state if exceeding the limit
     }
+
+    // Update localStorage with the new list of previous states
+    localStorage.setItem('previousStates', JSON.stringify(previousStates));
 }
 
 // Undo functionality to revert the game to the previous state
@@ -64,11 +73,19 @@ function undoLastMove() {
         alert("No moves to undo!");
         return;
     }
-    
+
     const lastState = previousStates.pop();
-    if (lastState) {
+
+    if (lastState && lastState != localStorage.getItem('tiles')) {
+        // Update localStorage with the reverted tiles state
         localStorage.setItem('tiles', lastState);
-        generateOrLoadTiles(); // Reload the tiles from the reverted state
+
+        // Also update localStorage for the list of previous states
+        localStorage.setItem('previousStates', JSON.stringify(previousStates));
+
+        // Reload the tiles to reflect the previous state
+        generateOrLoadTiles();
+
         alert("Undo successful!");
     }
 }
@@ -86,10 +103,10 @@ function generateTiles() {
 
     let temp = [];
     symbols.forEach(symbol => {
-        for (let i = 0; i < 4; i++) temp.push({ name: symbol });
+        for (let i = 0; i < 4; i++) temp.push({ name: symbol, flipped: true });
     });
     numbers.forEach(number => {
-        for (let i = 0; i < 4; i++) temp.push({ name: number });
+        for (let i = 0; i < 4; i++) temp.push({ name: number, flipped: true });
     });
 
     let shuffledTemp = shuffle(temp);
@@ -116,8 +133,9 @@ dragElement(document.getElementById("extra"));
 
 function dragElement(elmnt) {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    let originalPosition = { top: elmnt.offsetTop, left: elmnt.offsetLeft }; // Store original position
 
-    elmnt.onmousedown = function(e) {
+    elmnt.onmousedown = function (e) {
         e.preventDefault();
         pos3 = e.clientX;
         pos4 = e.clientY;
@@ -138,14 +156,26 @@ function dragElement(elmnt) {
     function closeDragElement() {
         document.onmouseup = null;
         document.onmousemove = null;
-        checkDropColumn(elmnt);
+
+        setTimeout(() => {
+            checkDropColumn(elmnt);
+
+            // Animate the extra tile back to its original position
+            elmnt.style.transition = "top 0.5s ease, left 0.5s ease";
+            elmnt.style.top = originalPosition.top + "px";
+            elmnt.style.left = originalPosition.left + "px";
+
+            // Optional: Remove the transition after it completes
+            setTimeout(() => {
+                elmnt.style.transition = "";
+            }, 500);
+        }, 250);
     }
 }
 
 // Check where the extra tile was dropped and trigger tile shifting
 function checkDropColumn(extraTile) {
     const tileSets = [document.getElementById('set1'), document.getElementById('set2')];
-    let dropped = false;
 
     tileSets.forEach((set, setIndex) => {
         const columns = set.children;
@@ -153,10 +183,8 @@ function checkDropColumn(extraTile) {
             const rect = tile.getBoundingClientRect();
 
             // If the extra tile was dropped within the bounds of this column
-            if (extraTile.offsetLeft >= rect.left && extraTile.offsetLeft <= rect.right && extraTile.offsetTop >= rect.top && extraTile.offsetTop <= rect.bottom)
-            {
+            if (extraTile.offsetLeft >= rect.left && extraTile.offsetLeft <= rect.right && extraTile.offsetTop >= rect.top && extraTile.offsetTop <= rect.bottom) {
                 shiftColumn(setIndex, index % 9); // Shift tiles in the detected column
-                dropped = true;
             }
         });
     });
@@ -174,6 +202,7 @@ function shiftColumn(setIndex, colIndex) {
     // Get the column to shift down
     let shiftedTile = setArray.map(row => row[colIndex]);
     let lastTile = shiftedTile.pop(); // Remove the last tile
+    extraTile.flipped = false;
     shiftedTile.unshift(extraTile); // Insert extra tile at the top
 
     // Apply downward movement animation to each tile
@@ -187,10 +216,7 @@ function shiftColumn(setIndex, colIndex) {
         shiftedTile.forEach((tileName, rowIndex) => {
             const tileElement = columnTiles[rowIndex * 9 + colIndex];
             tileElement.classList.remove('move-down');
-            tileElement.innerText = tileName.name;
         });
-
-        document.getElementById('extraTile').innerText = lastTile.name;
 
         setArray.forEach((row, rowIndex) => {
             row[colIndex] = shiftedTile[rowIndex];
@@ -203,10 +229,13 @@ function shiftColumn(setIndex, colIndex) {
         };
 
         localStorage.setItem('tiles', JSON.stringify(updatedTileData));
+
+        generateOrLoadTiles();
     }, 500); // 0.5s wait for the animation to complete
 }
 
 // Initialize the board and tiles
+saveCurrentState();
 generateOrLoadTiles();
 
 // Mute button functionality
@@ -269,7 +298,6 @@ function loadPlayerNames() {
     const player1NameContainer = document.getElementById('player1Name');
     const player2NameContainer = document.getElementById('player2Name');
 
-    // Display player names under their avatars
     if (player1Data && player1Data.username) {
         player1NameContainer.innerText = player1Data.username;
     } else {
@@ -283,5 +311,4 @@ function loadPlayerNames() {
     }
 }
 
-// Call the function to load and display player names when the page loads
 window.addEventListener('load', loadPlayerNames);

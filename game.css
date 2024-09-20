@@ -18,6 +18,7 @@ body {
     font-family: 'Great Vibes', 'Dancing Script', cursive;
     background-image: url("/wallpaper/game.jpeg");
     background-size: cover;
+    overflow-y: hidden;
 }
 
 /* Navbar styling */
@@ -121,50 +122,34 @@ body {
     font-weight: bold;
     cursor: pointer;
     color: var(--chinese-black);
-    transition: transform 0.6s, color 0.6s, background-color 0.6s;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease, color 0.6s, background-color 0.6s;
+}
+
+.tile.flip {
     transform: rotateY(180deg);
 }
 
-.tile:hover {
-    transform: rotateY(0deg);
-    background-color: var(--ivory);
-    color: var(--chinese-black);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transform: scale(1.05);
+.tile.move-down {
+    transform: translateY(100%);
 }
 
 .tile::before {
-    content: '';
+    content: attr(data-name);
+    position: absolute;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+}
+
+.tile::after {
+    content: ' ';
+    position: absolute;
+    backface-visibility: hidden;
+    background-color: var(--jade-green);
+    color: var(--chinese-black);
     width: 100%;
     height: 100%;
-    background-color: var(--jade-green);
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 15px;
-    transform: rotateY(0deg);
-    backface-visibility: hidden;
-    transition: transform 0.6s;
-}
-
-.tile:hover::before {
-    transform: rotateY(180deg);
-}
-
-.tile:focus, .tile:hover {
-    border-color: var(--gold);
-    outline: none;
-}
-
-/* CSS for tile movement */
-.tile {
-    position: relative;
-    transition: transform 0.5s ease;
-}
-
-/* Class to move tiles down */
-.tile.move-down {
-    transform: translateY(100%);
 }
 
 .player-name {
@@ -172,7 +157,6 @@ body {
     font-size: 1.2em;
     color: var(--ivory);
     margin-top: 10px;
-    font-family: 'Great Vibes', 'Dancing Script', cursive;
 }
 
 #playButton {
