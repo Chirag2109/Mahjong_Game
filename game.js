@@ -47,8 +47,39 @@ function loadTiles(container, tileArray) {
     });
 }
 
+let previousStates = [];
+
+// Save the current state before any major change
+function saveCurrentState() {
+    const currentState = localStorage.getItem('tiles');
+    previousStates.push(currentState); // Save the state to the stack
+    if (previousStates.length > 10) { // Limit the stack size if necessary
+        previousStates.shift(); // Remove the oldest state if the stack exceeds 10
+    }
+}
+
+// Undo functionality to revert the game to the previous state
+function undoLastMove() {
+    if (previousStates.length === 0) {
+        alert("No moves to undo!");
+        return;
+    }
+    
+    const lastState = previousStates.pop();
+    if (lastState) {
+        localStorage.setItem('tiles', lastState);
+        generateOrLoadTiles(); // Reload the tiles from the reverted state
+        alert("Undo successful!");
+    }
+}
+
+// Attach the undo function to the undo button
+const undoButton = document.getElementById('undoButton');
+undoButton.addEventListener('click', undoLastMove);
+
 // Generate new tiles and save them in localStorage as 2D arrays
 function generateTiles() {
+    saveCurrentState();
     let set1 = document.getElementById('set1');
     let set2 = document.getElementById('set2');
     let extraTileContainer = document.getElementById('extraTile');
@@ -133,6 +164,7 @@ function checkDropColumn(extraTile) {
 
 // Shift the tiles in the specified column down and update localStorage
 function shiftColumn(setIndex, colIndex) {
+    saveCurrentState();
     const tileData = JSON.parse(localStorage.getItem('tiles'));
     const { set1Array, set2Array, extraTile } = tileData;
 
@@ -186,14 +218,14 @@ const audio = document.getElementById('backgroundMusic');
 function updateMuteStatus() {
     const isMuted = localStorage.getItem('audioMuted') === 'true';
     audio.muted = isMuted;
-    muteIcon.src = isMuted ? 'mute.png' : 'sound.png';
+    muteIcon.src = isMuted ? '/logo/mute.png' : '/logo/sound.png';
     muteIcon.alt = isMuted ? 'Unmute' : 'Mute';
 }
 
 // Event listener to toggle mute
 muteButton.addEventListener('click', () => {
     audio.muted = !audio.muted;
-    muteIcon.src = audio.muted ? 'mute.png' : 'sound.png';
+    muteIcon.src = audio.muted ? '/logo/mute.png' : '/logo/sound.png';
     muteIcon.alt = audio.muted ? 'Unmute' : 'Mute';
 
     // Save the mute status to localStorage
@@ -228,3 +260,28 @@ restartButton.addEventListener('click', () => {
     }
     reloadAfterDelay();
 });
+
+// Function to load player names from localStorage
+function loadPlayerNames() {
+    const player1Data = JSON.parse(localStorage.getItem('player1'));
+    const player2Data = JSON.parse(localStorage.getItem('player2'));
+
+    const player1NameContainer = document.getElementById('player1Name');
+    const player2NameContainer = document.getElementById('player2Name');
+
+    // Display player names under their avatars
+    if (player1Data && player1Data.username) {
+        player1NameContainer.innerText = player1Data.username;
+    } else {
+        player1NameContainer.innerText = "Player 1"; // Default name if no data found
+    }
+
+    if (player2Data && player2Data.username) {
+        player2NameContainer.innerText = player2Data.username;
+    } else {
+        player2NameContainer.innerText = "Player 2"; // Default name if no data found
+    }
+}
+
+// Call the function to load and display player names when the page loads
+window.addEventListener('load', loadPlayerNames);

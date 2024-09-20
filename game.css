@@ -40,18 +40,12 @@ body {
 /* Navbar button styling */
 .navbar-button {
     cursor: pointer;
-    margin: 0 10px;
 }
 
 /* Image styling for buttons */
 .navbar-button img {
     width: 24px;
     height: 24px;
-}
-
-.avatar {
-    display: flex;
-    justify-content: center;
 }
 
 .avatar img {
@@ -173,6 +167,14 @@ body {
     transform: translateY(100%);
 }
 
+.player-name {
+    text-align: center;
+    font-size: 1.2em;
+    color: var(--ivory);
+    margin-top: 10px;
+    font-family: 'Great Vibes', 'Dancing Script', cursive;
+}
+
 #playButton {
     border: none;
     border-radius: 2px;
@@ -181,15 +183,15 @@ body {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
+    background-color: transparent;
 }
 
 #playButton:hover {
     background-color: var(--crimson);
-    color: var(--ivory);
 }
 
-#sound {
+#sound{
     width: 25px;
     height: 25px;
 }
@@ -202,15 +204,36 @@ body {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
+    background-color: transparent;
 }
 
 #reStart:hover {
     background-color: var(--crimson);
-    color: var(--ivory);
 }
 
-#start {
+#start{
+    width: 25px;
+    height: 25px;
+}
+
+#undoButton {
+    border: none;
+    border-radius: 2px;
+    margin-top: 0;
+    margin-left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: transparent;
+}
+
+#undoButton:hover {
+    background-color: var(--crimson);
+}
+
+#undo{
     width: 25px;
     height: 25px;
 }
