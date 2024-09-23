@@ -1,6 +1,6 @@
 // Define symbols and numbers
-const symbols = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
-const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const symbols = ["\u{1F022}", "\u{1F023}", "\u{1F024}", "\u{1F025}", "\u{1F026}", "\u{1F027}", "\u{1F028}", "\u{1F029}", "\u{1F02A}"];
+const numbers = ["\u{1F019}", "\u{1F01A}", "\u{1F01B}", "\u{1F01C}", "\u{1F01D}", "\u{1F01E}", "\u{1F01F}", "\u{1F020}", "\u{1F021}"];
 
 // Shuffle function
 function shuffle(array) {
@@ -41,7 +41,11 @@ function loadTiles(container, tileArray) {
         row.forEach(tile => {
             let tileDiv = document.createElement('div');
             tileDiv.classList.add('tile');
-            tileDiv.setAttribute('data-name', tile.name);
+            if (tile.flipped === false) {
+                tileDiv.setAttribute('data-name', tile.name);
+            } else {
+                tileDiv.setAttribute('data-name', "\u{1F02B}");
+            }
             tileDiv.classList.toggle('flip', tile.flipped === false);
             container.appendChild(tileDiv);
         });
@@ -108,6 +112,7 @@ function generateTiles() {
     numbers.forEach(number => {
         for (let i = 0; i < 4; i++) temp.push({ name: number, flipped: true });
     });
+    temp.push({ name: "\u{1F005}", flipped: true });
 
     let shuffledTemp = shuffle(temp);
     let set1Array = [], set2Array = [];
@@ -121,7 +126,8 @@ function generateTiles() {
     loadTiles(set2, set2Array);
 
     // Random extra tile
-    let randomTile = shuffledTemp[Math.floor(Math.random() * shuffledTemp.length)];
+    let randomTile = shuffledTemp[72];
+    shuffledTemp.splice(72, 1);
     extraTileContainer.innerText = randomTile.name;
 
     const tileData = { set1Array, set2Array, extraTile: randomTile };
@@ -173,21 +179,28 @@ function dragElement(elmnt) {
     }
 }
 
-// Check where the extra tile was dropped and trigger tile shifting
 function checkDropColumn(extraTile) {
     const tileSets = [document.getElementById('set1'), document.getElementById('set2')];
 
-    tileSets.forEach((set, setIndex) => {
-        const columns = set.children;
-        Array.from(columns).forEach((tile, index) => {
-            const rect = tile.getBoundingClientRect();
+    // Get the center point of the extra tile
+    const centerX = extraTile.offsetLeft + extraTile.offsetWidth / 2;
+    const centerY = extraTile.offsetTop + extraTile.offsetHeight / 2;
 
-            // If the extra tile was dropped within the bounds of this column
-            if (extraTile.offsetLeft >= rect.left && extraTile.offsetLeft <= rect.right && extraTile.offsetTop >= rect.top && extraTile.offsetTop <= rect.bottom) {
-                shiftColumn(setIndex, index % 9); // Shift tiles in the detected column
+    // Use elementFromPoint to find the topmost tile at the center point of the extra tile
+    const dropTarget = document.elementFromPoint(centerX, centerY);
+
+    if (dropTarget) {
+        // Check if the drop target is a tile within one of the sets
+        tileSets.forEach((set, setIndex) => {
+            if (set.contains(dropTarget)) {
+                const columns = Array.from(set.children);
+                const colIndex = columns.indexOf(dropTarget);
+                if (colIndex !== -1) {
+                    shiftColumn(setIndex, colIndex % 9); // Shift tiles in the detected column
+                }
             }
         });
-    });
+    }
 }
 
 // Shift the tiles in the specified column down and update localStorage
