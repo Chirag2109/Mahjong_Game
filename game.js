@@ -139,7 +139,7 @@ dragElement(document.getElementById("extra"));
 
 function dragElement(elmnt) {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    let originalPosition = { top: elmnt.offsetTop, left: elmnt.offsetLeft }; // Store original position
+    let originalPosition = { top: elmnt.offsetTop, left: elmnt.offsetLeft };
 
     elmnt.onmousedown = function (e) {
         e.preventDefault();
