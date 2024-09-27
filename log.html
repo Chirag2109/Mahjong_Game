@@ -17,7 +17,7 @@
                 <h2>Player 1 Sign-Up</h2>
                 <form id="player1-signup-form">
                     <label for="player1-signup-username">Username:</label>
-                    <input type="text" id="player1-signup-username" name="username" required>
+                    <input type="text" id="player1-signup-username" name="username" required autocomplete="username">
                     
                     <label for="player1-signup-password">Password:</label>
                     <input type="password" id="player1-signup-password" name="password" required autocomplete="new-password">
@@ -34,7 +34,7 @@
                 <h2>Player 1 Login</h2>
                 <form id="player1-login-form">
                     <label for="player1-login-username">Username:</label>
-                    <input type="text" id="player1-login-username" name="username" required>
+                    <input type="text" id="player1-login-username" name="username" required autocomplete="username">
                     
                     <label for="player1-login-password">Password:</label>
                     <input type="password" id="player1-login-password" name="password" required autocomplete="current-password">
@@ -42,6 +42,7 @@
                     <button type="submit">Login</button>
                 </form>
                 <button id="player1-switch-to-signup">Don't have an account? Sign Up</button>
+                <button id="player1-guest-login">Guest Mode</button>
             </div>
         </div>
 
@@ -57,7 +58,7 @@
                 <h2>Player 2 Sign-Up</h2>
                 <form id="player2-signup-form">
                     <label for="player2-signup-username">Username:</label>
-                    <input type="text" id="player2-signup-username" name="username" required>
+                    <input type="text" id="player2-signup-username" name="username" required autocomplete="username">
                     
                     <label for="player2-signup-password">Password:</label>
                     <input type="password" id="player2-signup-password" name="password" required autocomplete="new-password">
@@ -74,7 +75,7 @@
                 <h2>Player 2 Login</h2>
                 <form id="player2-login-form">
                     <label for="player2-login-username">Username:</label>
-                    <input type="text" id="player2-login-username" name="username" required>
+                    <input type="text" id="player2-login-username" name="username" required autocomplete="username">
                     
                     <label for="player2-login-password">Password:</label>
                     <input type="password" id="player2-login-password" name="password" required autocomplete="current-password">
@@ -82,8 +83,12 @@
                     <button type="submit">Login</button>
                 </form>
                 <button id="player2-switch-to-signup">Don't have an account? Sign Up</button>
-            </div>
+                <button id="player2-guest-login">Guest Mode</button>
         </div>
+    </div><br>
+
+    <div class="play-button-container">
+        <button id="play-button">Play</button>
     </div>
 
     <script src="log.js"></script>

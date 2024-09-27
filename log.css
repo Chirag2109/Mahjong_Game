@@ -12,33 +12,66 @@ body {
     background-image: url("/wallpaper/log.jpeg");
     background-size: cover;
     font-family: 'Great Vibes', 'Dancing Script', cursive;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
+/* Main container holding player sections and VS symbol */
 .container {
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-direction: row;
     width: 100%;
     max-width: 1200px;
+    padding: 20px;
+    flex-wrap: wrap; /* Allows wrapping if needed */
 }
 
+/* Separate container for play button, ensuring it's below the players */
+.play-button-container {
+    margin-top: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#play-button {
+    padding: 15px 30px;
+    background-color: var(--jade-green);
+    color: var(--ivory);
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+#play-button:hover {
+    background-color: var(--gold);
+    color: var(--chinese-black);
+}
+
+/* Individual player sections */
 .player-section {
     flex: 1;
     margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
+/* Styling for the form and its content */
 .form-container {
     background: var(--ivory);
     border-radius: 8px;
     box-shadow: 0 0 10px var(--chinese-black);
     padding: 20px;
     margin-bottom: 20px;
-    position: relative;
 }
 
 .avatar {
@@ -90,6 +123,7 @@ button:hover {
     background-color: var(--imperial-red);
 }
 
+/* VS symbol between player sections */
 .vs-symbol {
     display: flex;
     justify-content: center;
