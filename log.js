@@ -79,13 +79,17 @@ function handleLoginForm(event) {
             alert('This player is already logged in.');
             return;
         }
-        
+
         loggedInPlayers.push(existingUser);
         
         if (loggedInPlayers.length === 1) {
+            loggedInPlayers[0].category = Math.floor(Math.random() * 2) + 1 === 1? 'symbol':'number';
+            loggedInPlayers[0].count=0;
             localStorage.setItem('player1', JSON.stringify(loggedInPlayers[0]));
             alert(`Player 1: ${loggedInPlayers[0].username} logged in`);
         } else if (loggedInPlayers.length === 2) {
+            loggedInPlayers[1].category = loggedInPlayers[0].category === 'symbol'? 'number':'symbol';
+            loggedInPlayers[1].count=0;
             localStorage.setItem('player2', JSON.stringify(loggedInPlayers[1]));
             alert(`Player 2: ${loggedInPlayers[1].username} logged in`);
             window.location.href = 'game.html';
@@ -103,29 +107,33 @@ document.getElementById('player2-login-form').addEventListener('submit', (event)
 
 function handleGuestLogin(playerNumber) {
     const guestUser = {
-        username: `Guest${playerNumber}`, 
+        username: `Guest${playerNumber}`,
         password: '',
         score: 0
     };
-    
+
     if (loggedInPlayers.some(player => player.username === guestUser.username)) {
-        alert(`Guest${playerNumber} is already logged in.`);
+        handleGuestLogin(Math.floor(1000 + Math.random() * 9000));
         return;
     }
     
     loggedInPlayers.push(guestUser);
     
     if (loggedInPlayers.length === 1) {
+        loggedInPlayers[0].category = Math.floor(Math.random() * 2) + 1 === 1? 'symbol':'number';
+        loggedInPlayers[0].count=0;
         localStorage.setItem('player1', JSON.stringify(loggedInPlayers[0]));
         alert(`Player 1 (Guest${playerNumber}) logged in`);
     } else if (loggedInPlayers.length === 2) {
+        loggedInPlayers[1].category = loggedInPlayers[0].category === 'symbol'? 'number':'symbol';
+        loggedInPlayers[1].count=0;
         localStorage.setItem('player2', JSON.stringify(loggedInPlayers[1]));
         alert(`Player 2 (Guest${playerNumber}) logged in`);
     }
 }
 
-document.getElementById('player1-guest-login').addEventListener('click', () => handleGuestLogin(1));
-document.getElementById('player2-guest-login').addEventListener('click', () => handleGuestLogin(2));
+document.getElementById('player1-guest-login').addEventListener('click', () => handleGuestLogin(Math.floor(1000 + Math.random() * 9000)));
+document.getElementById('player2-guest-login').addEventListener('click', () => handleGuestLogin(Math.floor(1000 + Math.random() * 9000)));
 
 document.getElementById('play-button').addEventListener('click', () => {
     if (loggedInPlayers.length === 2) {

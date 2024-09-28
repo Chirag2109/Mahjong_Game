@@ -160,9 +160,8 @@ body {
 }
 
 .player-name {
-    text-align: center;
     font-size: 1.2em;
-    color: var(--ivory);
+    color: var(--imperial-red);
     margin-top: 10px;
 }
 
