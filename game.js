@@ -4,269 +4,289 @@ const numbers = ["\u{1F019}", "\u{1F01A}", "\u{1F01B}", "\u{1F01C}", "\u{1F01D}"
 
 // Shuffle function
 function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+   for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+   }
+   return array;
 }
 
 // Generate or load tiles from localStorage
 function generateOrLoadTiles() {
-    let set1 = document.getElementById('set1');
-    let set2 = document.getElementById('set2');
-    let extraTileContainer = document.getElementById('extraTile');
+   let set1 = document.getElementById('set1');
+   let set2 = document.getElementById('set2');
+   let extraTileContainer = document.getElementById('extraTile');
 
-    let savedTiles = localStorage.getItem('tiles');
-    if (savedTiles) {
-        const tilesData = JSON.parse(savedTiles);
-        const { set1Array, set2Array, extraTile } = tilesData;
+   let savedTiles = localStorage.getItem('tiles');
+   if (savedTiles) {
+      const tilesData = JSON.parse(savedTiles);
+      const { set1Array, set2Array, extraTile } = tilesData;
 
-        // Load the saved tiles into set1 and set2
-        loadTiles(set1, set1Array);
-        loadTiles(set2, set2Array);
+      // Load the saved tiles into set1 and set2
+      loadTiles(set1, set1Array);
+      loadTiles(set2, set2Array);
 
-        // Load the extra tile
-        extraTileContainer.innerText = extraTile.name;
+      // Load the extra tile
+      extraTileContainer.innerText = extraTile.name;
 
-    } else {
-        generateTiles();
-    }
+   } else {
+      generateTiles();
+   }
 }
 
 // Helper function to load tiles into the DOM
 function loadTiles(container, tileArray) {
-    container.innerHTML = "";
-    tileArray.forEach(row => {
-        row.forEach(tile => {
-            let tileDiv = document.createElement('div');
-            tileDiv.classList.add('tile');
-            tileDiv.setAttribute('data-name', tile.flipped ? "\u{1F02B}" : tile.name);
-            tileDiv.classList.toggle('flip', tile.flipped === false);
-            container.appendChild(tileDiv);
-        });
-    });
+   container.innerHTML = "";
+   tileArray.forEach(row => {
+      row.forEach(tile => {
+         let tileDiv = document.createElement('div');
+         tileDiv.classList.add('tile');
+         tileDiv.setAttribute('data-name', tile.flipped ? "\u{1F02B}" : tile.name);
+         tileDiv.classList.toggle('flip', tile.flipped === false);
+         container.appendChild(tileDiv);
+      });
+   });
 }
 
 function saveCurrentState() {
-    const currentState = localStorage.getItem('tiles');
+   const currentState = localStorage.getItem('tiles');
 
-    // Check if the previous state is different from the current state
-    let previousStates = JSON.parse(localStorage.getItem('previousStates')) || [];
-    const previousState = previousStates[previousStates.length - 1];
+   // Check if the previous state is different from the current state
+   let previousStates = JSON.parse(localStorage.getItem('previousStates')) || [];
+   const previousState = previousStates[previousStates.length - 1];
 
-    // Only push the new state if it's different from the last stored state
-    if (currentState !== previousState) {
-        previousStates.push(currentState);
+   // Only push the new state if it's different from the last stored state
+   if (currentState !== previousState) {
+      previousStates.push(currentState);
 
-        // Limit the number of stored states to 10 (adjustable)
-        if (previousStates.length > 100) {
-            previousStates.shift(); // Remove the oldest state if exceeding the limit
-        }
+      // Limit the number of stored states to 10 (adjustable)
+      if (previousStates.length > 100) {
+         previousStates.shift(); // Remove the oldest state if exceeding the limit
+      }
 
-        // Update localStorage with the new list of previous states
-        localStorage.setItem('previousStates', JSON.stringify(previousStates));
-    }
+      // Update localStorage with the new list of previous states
+      localStorage.setItem('previousStates', JSON.stringify(previousStates));
+   }
 }
-
 
 // Undo functionality to revert the game to the previous state
 function undoLastMove() {
-    // Initialize previous states from localStorage or set an empty array
-    let previousStates = JSON.parse(localStorage.getItem('previousStates')) || [];
+   // Initialize previous states from localStorage or set an empty array
+   let previousStates = JSON.parse(localStorage.getItem('previousStates')) || [];
 
-    if (previousStates.length === 0) {
-        alert("No moves to undo!");
-        return;
-    }
+   if (previousStates.length === 0) {
+      showCustomAlert("No moves to undo!");
+      return;
+   }
 
-    const lastState = previousStates.pop();
+   const lastState = previousStates.pop();
 
-    if (lastState && lastState != localStorage.getItem('tiles')) {
-        // Update localStorage with the reverted tiles state
-        localStorage.setItem('tiles', lastState);
+   if (lastState && lastState != localStorage.getItem('tiles')) {
+      // Update localStorage with the reverted tiles state
+      localStorage.setItem('tiles', lastState);
 
-        // Also update localStorage for the list of previous states
-        localStorage.setItem('previousStates', JSON.stringify(previousStates));
+      // Also update localStorage for the list of previous states
+      localStorage.setItem('previousStates', JSON.stringify(previousStates));
 
-        // Reload the tiles to reflect the previous state
-        generateOrLoadTiles();
+      // Reload the tiles to reflect the previous state
+      generateOrLoadTiles();
 
-        alert("Undo successful!");
-    }
+      showCustomAlert("Undo successful!");
+   }
 }
 
 // Generate new tiles and save them in localStorage as 2D arrays
 function generateTiles() {
-    let set1 = document.getElementById('set1');
-    let set2 = document.getElementById('set2');
-    let extraTileContainer = document.getElementById('extra');
+   let set1 = document.getElementById('set1');
+   let set2 = document.getElementById('set2');
+   let extraTileContainer = document.getElementById('extra');
 
-    let temp = [];
-    symbols.forEach(symbol => {
-        for (let i = 0; i < 4; i++) temp.push({ name: symbol, flipped: true, category: "symbol" });
-    });
-    numbers.forEach(number => {
-        for (let i = 0; i < 4; i++) temp.push({ name: number, flipped: true, category: "number" });
-    });
-    temp.push({ name: "\u{1F005}", flipped: true, category: "extra" });
+   let temp = [];
+   symbols.forEach(symbol => {
+      for (let i = 0; i < 4; i++) temp.push({ name: symbol, flipped: true, category: "symbol" });
+   });
+   numbers.forEach(number => {
+      for (let i = 0; i < 4; i++) temp.push({ name: number, flipped: true, category: "number" });
+   });
+   temp.push({ name: "\u{1F005}", flipped: true, category: "extra" });
 
-    let shuffledTemp = shuffle(temp);
-    let set1Array = [], set2Array = [];
+   let shuffledTemp = shuffle(temp);
+   let set1Array = [], set2Array = [];
 
-    // Split shuffled tiles into two sets
-    for (let i = 0; i < 36; i += 9) set1Array.push(shuffledTemp.slice(i, i + 9));
-    for (let i = 36; i < 72; i += 9) set2Array.push(shuffledTemp.slice(i, i + 9));
+   // Split shuffled tiles into two sets
+   for (let i = 0; i < 36; i += 9) set1Array.push(shuffledTemp.slice(i, i + 9));
+   for (let i = 36; i < 72; i += 9) set2Array.push(shuffledTemp.slice(i, i + 9));
 
-    // Add tiles to set1 and set2
-    loadTiles(set1, set1Array);
-    loadTiles(set2, set2Array);
+   // Add tiles to set1 and set2
+   loadTiles(set1, set1Array);
+   loadTiles(set2, set2Array);
 
-    // Random extra tile
-    let randomTile = shuffledTemp[72];
-    randomTile.flipped = false;
-    shuffledTemp.splice(72, 1);
-    extraTileContainer.innerText = randomTile.name;
+   // Random extra tile
+   let randomTile = shuffledTemp[72];
+   randomTile.flipped = false;
+   shuffledTemp.splice(72, 1);
+   extraTileContainer.innerText = randomTile.name;
 
-    const tileData = { set1Array, set2Array, extraTile: randomTile };
-    localStorage.setItem('tiles', JSON.stringify(tileData));
+   const tileData = { set1Array, set2Array, extraTile: randomTile };
+   localStorage.setItem('tiles', JSON.stringify(tileData));
 }
 
 // Shift the tiles in the specified column down and update localStorage
 function shiftColumn(setIndex, colIndex) {
-    return new Promise((resolve) => {
-        saveCurrentState();
-        const tileData = JSON.parse(localStorage.getItem('tiles'));
-        const { set1Array, set2Array, extraTile } = tileData;
+   return new Promise((resolve) => {
+      saveCurrentState();
+      const tileData = JSON.parse(localStorage.getItem('tiles'));
+      const { set1Array, set2Array, extraTile } = tileData;
 
-        let setArray = setIndex === 1 ? set1Array : set2Array;
-        let columnTiles = Array.from(document.getElementById(`set${setIndex}`).children);
+      let setArray = setIndex === 1 ? set1Array : set2Array;
+      let columnTiles = Array.from(document.getElementById(`set${setIndex}`).children);
 
-        // Get the column to shift down
-        let shiftedTile = setArray.map(row => row[colIndex]);
-        let lastTile = shiftedTile.pop(); // Remove the last tile
-        lastTile.flipped = false;
-        shiftedTile.unshift(extraTile); // Insert extra tile at the top
+      // Get the column to shift down
+      let shiftedTile = setArray.map(row => row[colIndex]);
+      let lastTile = shiftedTile.pop(); // Remove the last tile
+      lastTile.flipped = false;
+      shiftedTile.unshift(extraTile); // Insert extra tile at the top
 
-        // Apply downward movement animation to each tile
-        shiftedTile.forEach((tileName, rowIndex) => {
+      // Apply downward movement animation to each tile
+      shiftedTile.forEach((tileName, rowIndex) => {
+         const tileElement = columnTiles[rowIndex * 9 + colIndex];
+         tileElement.classList.add('move-down');
+      });
+
+      // After the animation, update the tiles in the DOM and localStorage
+      setTimeout(() => {
+         shiftedTile.forEach((tileName, rowIndex) => {
             const tileElement = columnTiles[rowIndex * 9 + colIndex];
-            tileElement.classList.add('move-down');
-        });
+            tileElement.classList.remove('move-down');
+         });
 
-        // After the animation, update the tiles in the DOM and localStorage
-        setTimeout(() => {
-            shiftedTile.forEach((tileName, rowIndex) => {
-                const tileElement = columnTiles[rowIndex * 9 + colIndex];
-                tileElement.classList.remove('move-down');
-            });
+         setArray.forEach((row, rowIndex) => {
+            row[colIndex] = shiftedTile[rowIndex];
+         });
 
-            setArray.forEach((row, rowIndex) => {
-                row[colIndex] = shiftedTile[rowIndex];
-            });
+         const updatedTileData = {
+            set1Array: setIndex === 1 ? setArray : set1Array,
+            set2Array: setIndex === 2 ? setArray : set2Array,
+            extraTile: lastTile
+         };
 
-            const updatedTileData = {
-                set1Array: setIndex === 1 ? setArray : set1Array,
-                set2Array: setIndex === 2 ? setArray : set2Array,
-                extraTile: lastTile
-            };
+         localStorage.setItem('tiles', JSON.stringify(updatedTileData));
 
-            localStorage.setItem('tiles', JSON.stringify(updatedTileData));
-
-            generateOrLoadTiles();
-            resolve();
-        }, 100);
-    });
+         generateOrLoadTiles();
+         resolve();
+      }, 100);
+   });
 }
 
 function checkDropColumn(allowedSet, dropTarget) {
-    return new Promise((resolve) => {
-        if (dropTarget) {
-            // Check if the drop target is a tile within one of the sets
-            if (allowedSet.contains(dropTarget)) {
-                const columns = Array.from(allowedSet.children);
-                const colIndex = columns.indexOf(dropTarget);
-                if (colIndex !== -1) {
-                    let setIndex = allowedSet === document.getElementById('set1') ? 1 : 2;
-                    shiftColumn(setIndex, colIndex % 9).then(() => {
-                        resolve(true);
-                    });
-                } else {
-                    resolve(false);
-                }
+   return new Promise((resolve) => {
+      if (dropTarget) {
+         // Check if the drop target is a tile within one of the sets
+         if (allowedSet.contains(dropTarget)) {
+            const columns = Array.from(allowedSet.children);
+            const colIndex = columns.indexOf(dropTarget);
+
+            if (colIndex !== -1) {
+               const isTopTileFlipped = allowedSet.children[colIndex].classList.contains('flip') === false;
+               console.log(isTopTileFlipped);
+               const isSametile = allowedSet.children[colIndex].getAttribute('data-name') === document.getElementById('extraTile').getAttribute('data-name');
+               console.log(allowedSet.children[colIndex].getAttribute('data-name'));
+               console.log(document.getElementById('extraTile').getAttribute('data-name'));
+
+               // Check if the top tile is flipped or the tiles match
+               if (isTopTileFlipped ^ isSametile) {
+                  let setIndex = allowedSet === document.getElementById('set1') ? 1 : 2;
+                  shiftColumn(setIndex, colIndex % 9).then(() => {
+                     resolve(true);
+                  });
+               } else {
+                  resolve(false);
+               }
             } else {
-                resolve(false);
+               resolve(false);
             }
-        } else {
+         } else {
             resolve(false);
-        }
-    });
+         }
+      } else {
+         resolve(false);
+      }
+   });
 }
 
 function dragElement(elmnt, allowedSet) {
-    let originalPosition = JSON.parse(localStorage.getItem('originalPosition'));
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+   // Store the current allowed set in a constant to avoid changes during the drag
+   // let currentAllowedSet = allowedSet;
+   let originalPosition = JSON.parse(localStorage.getItem('gameState')).originalPosition;
+   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-    return new Promise((resolve) => {
-        elmnt.onmousedown = function (e) {
-            e.preventDefault();
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-        };
+   return new Promise((resolve) => {
+      elmnt.onmousedown = function (e) {
+         e.preventDefault();
+         pos3 = e.clientX;
+         pos4 = e.clientY;
 
-        function elementDrag(e) {
-            e.preventDefault();
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-        }
+         // Ensure we keep the allowedSet at the start of the drag
+         // const startAllowedSet = currentAllowedSet;
+         document.onmouseup = () => closeDragElement();
+         document.onmousemove = elementDrag;
+      };
 
-        function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
+      function elementDrag(e) {
+         e.preventDefault();
+         pos1 = pos3 - e.clientX;
+         pos2 = pos4 - e.clientY;
+         pos3 = e.clientX;
+         pos4 = e.clientY;
+         elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+         elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+      }
 
-            setTimeout(() => {
-                const centerX = elmnt.offsetLeft + (elmnt.offsetWidth / 2);
-                const centerY = elmnt.offsetTop + (elmnt.offsetHeight / 2);
-                const dropTarget = document.elementFromPoint(centerX, centerY);
+      function closeDragElement() {
+         document.onmouseup = null;
+         document.onmousemove = null;
 
-                if (allowedSet.contains(dropTarget)) {
-                    console.log(allowedSet.contains(dropTarget));
-                    checkDropColumn(allowedSet, dropTarget).then((result) => {
 
-                        // Animate the extra tile back to its original position
-                        elmnt.style.transition = "top 0.5s ease, left 0.5s ease";
-                        elmnt.style.top = originalPosition.top + "px";
-                        elmnt.style.left = originalPosition.left + "px";
+         setTimeout(() => {
+            const centerX = elmnt.offsetLeft + (elmnt.offsetWidth / 2);
+            const centerY = elmnt.offsetTop + (elmnt.offsetHeight / 2);
+            const dropTarget = document.elementFromPoint(centerX, centerY);
 
-                        // Optional: Remove the transition after it completes
-                        setTimeout(() => {
-                            elmnt.style.transition = "";
-                        }, 500);
-                        resolve(result);
-                    });
-                } else {
-                    alert("Invalid drop! You can only drop the extra tile within the specified tile sets.");
+            if (allowedSet.contains(dropTarget)) {
+               checkDropColumn(allowedSet, dropTarget).then((result) => {
 
-                    // Animate the extra tile back to its original position
-                    elmnt.style.transition = "top 0.5s ease, left 0.5s ease";
-                    elmnt.style.top = originalPosition.top + "px";
-                    elmnt.style.left = originalPosition.left + "px";
+                  // Animate the extra tile back to its original position
+                  elmnt.style.transition = "top 0.5s ease, left 0.5s ease";
+                  elmnt.style.top = originalPosition.top + "px";
+                  elmnt.style.left = originalPosition.left + "px";
 
-                    // Optional: Remove the transition after it completes
-                    setTimeout(() => {
-                        elmnt.style.transition = "";
-                    }, 500);
-                    resolve(false);
-                }
-            }, 100);
-        }
-    });
+                  // Optional: Remove the transition after it completes
+                  setTimeout(() => {
+                     elmnt.style.transition = "";
+                  }, 50);
+                  if (!result) {
+                     showCustomAlert("Invalid drop! You can only drop the extra tile in the column where either the top tile is flipped or the tiles match.");
+                     resolve(false);
+                  }
+                  resolve(result);
+               });
+            } else {
+               showCustomAlert("Invalid drop! You can only drop the extra tile within the specified tile sets.");
+
+               // Animate the extra tile back to its original position
+               elmnt.style.transition = "top 0.5s ease, left 0.5s ease";
+               elmnt.style.top = originalPosition.top + "px";
+               elmnt.style.left = originalPosition.left + "px";
+
+               // Optional: Remove the transition after it completes
+               setTimeout(() => {
+                  elmnt.style.transition = "";
+               }, 50);
+               resolve(false);
+            }
+         }, 100);
+      }
+   });
 }
 
 // Mute button functionality
@@ -282,127 +302,170 @@ const table = document.getElementById('Table');
 
 // Function to update the mute status
 function updateMuteStatus() {
-    const isMuted = localStorage.getItem('audioMuted') === 'true';
-    audio.muted = isMuted;
-    muteIcon.src = isMuted ? '/logo/mute.png' : '/logo/sound.png';
-    muteIcon.alt = isMuted ? 'Unmute' : 'Mute';
+   const isMuted = localStorage.getItem('audioMuted') === 'true';
+   audio.muted = isMuted;
+   muteIcon.src = isMuted ? '/logo/mute.png' : '/logo/sound.png';
+   muteIcon.alt = isMuted ? 'Unmute' : 'Mute';
 }
 
 function loadPlayerNames() {
-    const player1Data = JSON.parse(localStorage.getItem('player1'));
-    const player2Data = JSON.parse(localStorage.getItem('player2'));
+   const gameState = JSON.parse(localStorage.getItem('gameState'));
+   const player1Data = gameState.player1;
+   const player2Data = gameState.player2;
 
-    const player1NameContainer = document.getElementById('player1Name');
-    const player2NameContainer = document.getElementById('player2Name');
+   const player1NameContainer = document.getElementById('player1Name');
+   const player2NameContainer = document.getElementById('player2Name');
 
-    player1NameContainer.innerHTML = `Username: ${player1Data?.username || 'Player1'}<br>Category: ${player1Data?.category || 'Unknown'}`;
-    player2NameContainer.innerHTML = `Username: ${player2Data?.username || 'Player1'}<br>Category: ${player2Data?.category || 'Unknown'}`;
+   player1NameContainer.innerHTML = `Username: ${player1Data?.username || 'Player1'}<br>Category: ${player1Data?.category || 'Unknown'}`;
+   player2NameContainer.innerHTML = `Username: ${player2Data?.username || 'Player2'}<br>Category: ${player2Data?.category || 'Unknown'}`;
 }
 
 // Event listener to toggle mute
 muteButton.addEventListener('click', () => {
-    audio.muted = !audio.muted;
-    muteIcon.src = audio.muted ? '/logo/mute.png' : '/logo/sound.png';
-    muteIcon.alt = audio.muted ? 'Unmute' : 'Mute';
+   audio.muted = !audio.muted;
+   muteIcon.src = audio.muted ? '/logo/mute.png' : '/logo/sound.png';
+   muteIcon.alt = audio.muted ? 'Unmute' : 'Mute';
 
-    // Save the mute status to localStorage
-    localStorage.setItem('audioMuted', audio.muted);
+   // Save the mute status to localStorage
+   localStorage.setItem('audioMuted', audio.muted);
 });
 
 undoButton.addEventListener('click', undoLastMove);
 
 restartButton.addEventListener('click', () => {
-    loader.style.display = 'block';
-    table.style.display = 'none';
+   loader.style.display = 'block';
+   table.style.display = 'none';
 
-    localStorage.removeItem('tiles');
+   localStorage.removeItem('tiles');
 
-    const minDisplayTime = 3000;
-    const startTime = Date.now();
+   const minDisplayTime = 3000;
+   const startTime = Date.now();
 
-    function reloadAfterDelay() {
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = Math.max(minDisplayTime - elapsedTime, 0);
+   function reloadAfterDelay() {
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(minDisplayTime - elapsedTime, 0);
 
-        setTimeout(() => {
-            window.location.reload();
-            generateOrLoadTiles();
-        }, remainingTime);
-    }
-    reloadAfterDelay();
+      setTimeout(() => {
+         window.location.reload();
+         generateOrLoadTiles();
+      }, remainingTime);
+   }
+   reloadAfterDelay();
 });
 
+function showCustomAlert(message, duration = 3000) {
+   const alertElement = document.getElementById('customAlert');
+   alertElement.textContent = message;
+   alertElement.style.display = 'block';
+   alertElement.style.opacity = '1';
+
+   setTimeout(() => {
+      alertElement.style.opacity = '0';
+      setTimeout(() => {
+         alertElement.style.display = 'none';
+      }, 300);
+   }, duration);
+}
+
+
 function PLAY() {
-    updateMuteStatus();
-    loadPlayerNames();
-    saveCurrentState();
-    generateOrLoadTiles();
+   updateMuteStatus();
+   loadPlayerNames();
+   saveCurrentState();
+   generateOrLoadTiles();
 
-    let player1 = JSON.parse(localStorage.getItem('player1'));
-    let player2 = JSON.parse(localStorage.getItem('player2'));
-    let extraTile2 = JSON.parse(localStorage.getItem('tiles')).extraTile;
-    let extraTilediv = document.getElementById("extra");
-    const originalPosition = { top: extraTilediv.offsetTop, left: extraTilediv.offsetLeft };
-    let currentPlayer = player1.category === extraTile2.category ? 1 : 2;
-    localStorage.setItem('originalPosition', JSON.stringify(originalPosition));
+   const extraTilediv = document.getElementById("extra");
+   let gameState = JSON.parse(localStorage.getItem('gameState'));
 
-    // Helper function to check for game end
-    function checkGameEnd() {
-        if (player1.count >= 36) {
-            alert(`${player1.username} wins!`);
-            return true;
-        } else if (player2.count >= 36) {
-            alert(`${player2.username} wins!`);
-            return true;
-        }
-        return false;
-    }
+   // Update game state with extra tile information
+   gameState.extraTile = JSON.parse(localStorage.getItem('tiles')).extraTile;
+   gameState.currentPlayer = (gameState.player1.category === gameState.extraTile.category) ? 1 : 2;
+   gameState.currentPlayerData = (gameState.currentPlayer === 1) ? gameState.player1 : gameState.player2;
+   gameState.originalPosition = { top: extraTilediv.offsetTop, left: extraTilediv.offsetLeft };
+   localStorage.setItem('gameState', JSON.stringify(gameState));
 
-    // Helper function to toggle turn between players
-    function toggleTurn() {
-        if (!checkGameEnd()) {
-            currentPlayer = currentPlayer === 1 ? 2 : 1;
-            alert(`It's now Player ${currentPlayer}'s turn.`);
-        }
-    }
+   // Helper function to check for game end
+   function checkGameEnd() {
+      let currentGameState = JSON.parse(localStorage.getItem('gameState'));
+      if (currentGameState.player1.count >= 36) {
+         showCustomAlert(`${currentGameState.player1.username} wins!`);
+         return true;
+      } else if (currentGameState.player2.count >= 36) {
+         showCustomAlert(`${currentGameState.player2.username} wins!`);
+         return true;
+      }
+      return false;
+   }
 
-    // Function to update player count
-    function updatePlayerCount(player) {
-        player.count++;
-        localStorage.setItem(`player${currentPlayer}`, JSON.stringify(player));
-    }
+   function updatePlayerCount() {
+      let currentGameState = JSON.parse(localStorage.getItem('gameState'));
+      if (currentGameState.currentPlayerData.username === currentGameState.player1.username) {
+         currentGameState.player1.count += 1;
+      } else {
+         currentGameState.player2.count += 1;
+      }
+      localStorage.setItem('gameState', JSON.stringify(currentGameState));
+   }
 
-    // Function to handle player turn and update state
-    async function handlePlayerTurn() {
-        let currentPlayerData = currentPlayer === 1 ? player1 : player2;
-        let validSet = currentPlayer === 1 ? document.getElementById('set1') : document.getElementById('set2');
+   // Helper function to toggle turn between players
+   function toggleTurn() {
+      if (!checkGameEnd()) {
+         let currentGameState = JSON.parse(localStorage.getItem('gameState'));
+         currentGameState.currentPlayer = (currentGameState.currentPlayer === 1) ? 2 : 1;
+         currentGameState.currentPlayerData = (currentGameState.currentPlayer === 1) ? currentGameState.player1 : currentGameState.player2;
+         localStorage.setItem('gameState', JSON.stringify(currentGameState));
+         showCustomAlert(`It's now Player ${currentGameState.currentPlayer}'s turn.`);
+      } else {
+         throw new Error("Game has ended");
+      }
+   }
 
-        let isDropped = await dragElement(extraTilediv, validSet);
+   async function handlePlayerTurn() {
+      let currentGameState = JSON.parse(localStorage.getItem('gameState'));
 
-        // Fetch the latest tile data from localStorage after the drag operation is complete
-        let tileData1 = JSON.parse(localStorage.getItem('tiles'));
-        // Re-fetch the updated extraTile value from the latest tileData
-        let extraTile1 = tileData1.extraTile;
+      // Determine the correct set based on the current player
+      const currentSet = document.getElementById(`set${currentGameState.currentPlayer}`);
 
-        // Continue with the player turn logic after drag is completed
-        if (isDropped) {
-            updatePlayerCount(currentPlayerData);
-            if (currentPlayerData.category === extraTile1.category) {
-                alert(`Player${currentPlayer} gets another turn!`);
-            } else {
-                toggleTurn();
+      // Wait for the drag to complete
+      let isDropped = await dragElement(extraTilediv, currentSet);
+
+      // After drag, update the state with the latest tile data
+      currentGameState = JSON.parse(localStorage.getItem('gameState'));
+      currentGameState.extraTile = JSON.parse(localStorage.getItem('tiles')).extraTile;
+      localStorage.setItem('gameState', JSON.stringify(currentGameState));
+
+      // Continue with the player turn logic after drag is completed
+      if (isDropped) {
+         updatePlayerCount();
+
+         // Re-fetch the currentGameState after player count is updated
+         currentGameState = JSON.parse(localStorage.getItem('gameState'));
+
+         // Check if player gets another turn
+         if (currentGameState.currentPlayerData.category === currentGameState.extraTile.category) {
+            showCustomAlert(`Player ${currentGameState.currentPlayer} gets another turn!`);
+         } else {
+            try {
+               // Toggle turn if conditions for another turn are not met
+               toggleTurn();
+               currentGameState = JSON.parse(localStorage.getItem('gameState'));
+            } catch (error) {
+               // Optional: Provide feedback if game has ended
+               showCustomAlert(`${error.message}. No further moves.`);
             }
-        }
-    }
+         }
+      }
+   }
 
-    // Set up the event listener for the extra tile dragging
-    document.getElementById("extra").addEventListener('mouseup', (e) => {
-        handlePlayerTurn();
-        e.preventDefault();
-    });
 
-    // Initialize the first player's turn
-    alert(`It's Player ${currentPlayer}'s turn.`);
+   // Set up the event listener for the extra tile dragging
+   extraTilediv.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      handlePlayerTurn();
+   });
+
+   // Initialize the first player's turn
+   showCustomAlert(`It's Player ${gameState.currentPlayer}'s turn.`);
 }
 
 window.addEventListener('load', PLAY);
