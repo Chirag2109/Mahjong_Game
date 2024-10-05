@@ -404,20 +404,24 @@ function PLAY() {
       let currentGameState = JSON.parse(localStorage.getItem('gameState'));
 
       if (currentGameState.player1.count >= 36 && !tiles.set1Array.some(tile => tile.category === "extra")) {
-         users[currentGameState.player1.username].score += currentGameState.player2.score;
-         users[currentGameState.player2.username].score /= 2;
-         localStorage.setItem('gameState', JSON.stringify(currentGameState)); // Update gameState in localStorage
+         if (users[currentGameState.player1.username] && users[currentGameState.player2.username]) {
+            users[currentGameState.player1.username].score += currentGameState.player2.score;
+            users[currentGameState.player2.username].score /= 2;
+            localStorage.setItem('users', JSON.stringify(users));
+         }
          alert(`${currentGameState.player1.username} wins!`);
          return true;
       } else if (currentGameState.player2.count >= 36 && !tiles.set2Array.some(tile => tile.category === "extra")) {
-         users[currentGameState.player2.username].score += currentGameState.player1.score;
-         users[currentGameState.player1.username].score /= 2;
-         localStorage.setItem('gameState', JSON.stringify(currentGameState)); // Update gameState in localStorage
+         if (users[currentGameState.player1.username] && users[currentGameState.player2.username]) {
+            users[currentGameState.player2.username].score += currentGameState.player1.score;
+            users[currentGameState.player1.username].score /= 2;
+            localStorage.setItem('users', JSON.stringify(users));
+         }
          alert(`${currentGameState.player2.username} wins!`);
          return true;
+      } else {
+         return false;
       }
-
-      return false;
    }
 
    // Helper function to update the player count

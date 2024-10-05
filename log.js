@@ -6,7 +6,7 @@ const loadUsersFromLocalStorage = () => {
     return [];
 };
 
-function showCustomAlert(message, duration = 3000) {
+function showCustomAlert(message, duration = 5000) {
     const alertElement = document.getElementById('customAlert');
     alertElement.textContent = message;
     alertElement.style.display = 'block';
@@ -21,7 +21,6 @@ function showCustomAlert(message, duration = 3000) {
 }
 
 const users = loadUsersFromLocalStorage();
-
 
 function handleSignupForm(event, score) {
     event.preventDefault();
