@@ -18,17 +18,22 @@ body {
     font-family: 'Great Vibes', 'Dancing Script', cursive;
     background-image: url("/wallpaper/game.jpeg");
     background-size: cover;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 /* Navbar styling */
 .navbar {
     background-color: var(--imperial-red);
-    padding: 10px;
     position: fixed;
     width: 100%;
     height: 30px;
-    z-index: -1;
+}
+
+.players {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-top: 40px;
 }
 
 /* Container for navbar elements */
@@ -41,6 +46,11 @@ body {
 /* Navbar button styling */
 .navbar-button {
     cursor: pointer;
+    border: none;
+    background-color: transparent;
+    margin-left: 10px; /* Consistent spacing */
+    outline: none;
+    transition: background-color 0.3s ease;
 }
 
 /* Image styling for buttons */
@@ -49,10 +59,15 @@ body {
     height: 24px;
 }
 
-.players {
+/* Hover effects for buttons */
+.navbar-button:hover {
+    background-color: var(--crimson);
+}
+
+.avatar {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
 }
 
 .avatar img {
@@ -62,16 +77,27 @@ body {
     border: 3px solid var(--gold);
 }
 
+.player-name {
+    font-size: 1.2em;
+    color: var(--imperial-red);
+    margin-top: 10px;
+}
+
+/* Table Layout */
+#Table {
+    margin-top: 20px; /* Spacing from player avatars */
+}
+
 .table-top {
     display: flex;
     justify-content: space-around;
     align-items: center;
     gap: 60px;
-    top: 100px;
     border-radius: 25px;
     position: relative;
 }
 
+/* Tile sets */
 .tile-set {
     display: grid;
     grid-template-columns: repeat(9, 75px);
@@ -94,10 +120,6 @@ body {
     transition: transform 0.2s, opacity 0.2s;
 }
 
-.extra-tile:active {
-    opacity: 0.7;
-}
-
 .extra-tile:hover {
     outline: none;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -109,6 +131,7 @@ body {
     z-index: 9;
 }
 
+/* Tile styling */
 .tile {
     width: 100%;
     height: 100%;
@@ -133,18 +156,7 @@ body {
     transform: translateY(100%);
 }
 
-.tile::before {
-    content: attr(data-name);
-    position: absolute;
-    transform: rotateY(180deg);
-    backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-}
-
+.tile::before,
 .tile::after {
     content: attr(data-name);
     position: absolute;
@@ -152,82 +164,21 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--jade-green);
-    color: var(--chinese-black);
-    border-radius: 8px;
     width: 100%;
     height: 100%;
 }
 
-.player-name {
-    font-size: 1.2em;
-    color: var(--imperial-red);
-    margin-top: 10px;
+.tile::before {
+    transform: rotateY(180deg);
 }
 
-#playButton {
-    border: none;
-    border-radius: 2px;
-    margin-top: 0;
-    margin-left: 60px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background-color: transparent;
+.tile::after {
+    background-color: var(--jade-green);
+    color: var(--chinese-black);
+    border-radius: 8px;
 }
 
-#playButton:hover {
-    background-color: var(--crimson);
-}
-
-#sound{
-    width: 25px;
-    height: 25px;
-}
-
-#reStart {
-    border: none;
-    border-radius: 2px;
-    margin-top: 0;
-    margin-left: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background-color: transparent;
-}
-
-#reStart:hover {
-    background-color: var(--crimson);
-}
-
-#start{
-    width: 25px;
-    height: 25px;
-}
-
-#undoButton {
-    border: none;
-    border-radius: 2px;
-    margin-top: 0;
-    margin-left: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background-color: transparent;
-}
-
-#undoButton:hover {
-    background-color: var(--crimson);
-}
-
-#undo{
-    width: 25px;
-    height: 25px;
-}
-
+/* Loader styling */
 .loader {
     position: fixed;
     top: 45%;
@@ -244,14 +195,11 @@ body {
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
+/* Custom alert box styling */
 .custom-alert {
     display: none;
     position: fixed;
@@ -262,7 +210,7 @@ body {
     color: #721c24;
     padding: 10px 20px;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     transition: opacity 0.3s ease-in-out;
 }

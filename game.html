@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="/logo/logo.png" type="image/png">
     <title>Mahjong Board</title>
     <link rel="stylesheet" href="game.css">
 </head>
@@ -13,20 +13,19 @@
     <audio id="backgroundMusic" autoplay loop>
         <source src="/audio/TunePocket-Chinese-Tiger-Celebration-Preview.mp3" type="audio/mpeg" />
     </audio>
-    <nav class="navbar"></nav>
-    <div class="navbar-container">
-        <button id="playButton" class="navbar-button">
-            <img src="/logo/sound.png" alt="Mute" id="sound">
-        </button>
-        <button id="reStart" class="navbar-button">
-            <img src="/logo/rotate.png" alt="Restart" id="start">
-        </button>
-        <button id="undoButton" class="navbar-button">
-            <img src="/logo/undo.png" alt="Undo" id="undo">
-        </button>
-    </div>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <button id="playButton" class="navbar-button">
+                <img src="/logo/sound.png" alt="Mute" id="sound">
+            </button>
+            <button id="reStart" class="navbar-button">
+                <img src="/logo/rotate.png" alt="Restart" id="start">
+            </button>
+            <button id="undoButton" class="navbar-button">
+                <img src="/logo/undo.png" alt="Undo" id="undo">
+            </button>
+        </div>
     </nav>
-    <div id="loader" class="loader"></div>
     <div class="players">
         <!-- Player 1 Avatar -->
         <div class="avatar">
@@ -55,6 +54,7 @@
         </div>
     </div>
 
+    <div id="loader" class="loader"></div>
     <div id="customAlert" class="custom-alert"></div>
     <script src="game.js"></script>
 </body>

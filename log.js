@@ -22,7 +22,7 @@ function showCustomAlert(message, duration = 5000) {
 
 const users = loadUsersFromLocalStorage();
 
-function handleSignupForm(event, score) {
+function handleSignupForm(event, score = 0) {
     event.preventDefault();
 
     const form = event.target;
@@ -72,8 +72,8 @@ function handleSignupForm(event, score) {
     showCustomAlert('Signup successful!');
 }
 
-document.getElementById('player1-signup-form').addEventListener('submit', (event) => handleSignupForm(event, 0));
-document.getElementById('player2-signup-form').addEventListener('submit', (event) => handleSignupForm(event, 0));
+document.getElementById('player1-signup-form').addEventListener('submit', (event) => handleSignupForm(event));
+document.getElementById('player2-signup-form').addEventListener('submit', (event) => handleSignupForm(event));
 
 let loggedInPlayers = [];
 
