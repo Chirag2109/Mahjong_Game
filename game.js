@@ -187,14 +187,27 @@ function checkDropColumn(allowedSet, dropTarget) {
             const colIndex = columns.indexOf(dropTarget);
 
             if (colIndex !== -1) {
-               const isTopTileFlipped = allowedSet.children[colIndex].classList.contains('flip') === false;
+               const tiles = JSON.parse(localStorage.getItem('tiles'));
+               const set = allowedSet === document.getElementById('set1') ? tiles.set1Array : tiles.set2Array;
+               const isSametile = set[0][colIndex % 9].name === tiles.extraTile.name;
+               console.log(isSametile);
+               const isTopTileFlipped = set[0][colIndex % 9].flipped;
                console.log(isTopTileFlipped);
-               const isSametile = allowedSet.children[colIndex].getAttribute('data-name') === document.getElementById('extraTile').getAttribute('data-name');
-               console.log(allowedSet.children[colIndex].getAttribute('data-name'));
-               console.log(document.getElementById('extraTile').getAttribute('data-name'));
+               const isExtraTile = tiles.extraTile.category === "extra" || set[0][colIndex % 9].category === "extra";
+               console.log(isExtraTile);
 
-               // Check if the top tile is flipped or the tiles match
-               if (isTopTileFlipped ^ isSametile) {
+               // Check if the top tile is flipped or the tiles match or the extra tile is dropped
+               if (isTopTileFlipped) {
+                  let setIndex = allowedSet === document.getElementById('set1') ? 1 : 2;
+                  shiftColumn(setIndex, colIndex % 9).then(() => {
+                     resolve(true);
+                  });
+               } else if (isSametile) {
+                  let setIndex = allowedSet === document.getElementById('set1') ? 1 : 2;
+                  shiftColumn(setIndex, colIndex % 9).then(() => {
+                     resolve(true);
+                  });
+               } else if (isExtraTile) {
                   let setIndex = allowedSet === document.getElementById('set1') ? 1 : 2;
                   shiftColumn(setIndex, colIndex % 9).then(() => {
                      resolve(true);
@@ -386,17 +399,28 @@ function PLAY() {
 
    // Helper function to check for game end
    function checkGameEnd() {
+      let tiles = JSON.parse(localStorage.getItem('tiles'));
+      let users = JSON.parse(localStorage.getItem('users'));
       let currentGameState = JSON.parse(localStorage.getItem('gameState'));
-      if (currentGameState.player1.count >= 36) {
-         showCustomAlert(`${currentGameState.player1.username} wins!`);
+
+      if (currentGameState.player1.count >= 36 && !tiles.set1Array.some(tile => tile.category === "extra")) {
+         users[currentGameState.player1.username].score += currentGameState.player2.score;
+         users[currentGameState.player2.username].score /= 2;
+         localStorage.setItem('gameState', JSON.stringify(currentGameState)); // Update gameState in localStorage
+         alert(`${currentGameState.player1.username} wins!`);
          return true;
-      } else if (currentGameState.player2.count >= 36) {
-         showCustomAlert(`${currentGameState.player2.username} wins!`);
+      } else if (currentGameState.player2.count >= 36 && !tiles.set2Array.some(tile => tile.category === "extra")) {
+         users[currentGameState.player2.username].score += currentGameState.player1.score;
+         users[currentGameState.player1.username].score /= 2;
+         localStorage.setItem('gameState', JSON.stringify(currentGameState)); // Update gameState in localStorage
+         alert(`${currentGameState.player2.username} wins!`);
          return true;
       }
+
       return false;
    }
 
+   // Helper function to update the player count
    function updatePlayerCount() {
       let currentGameState = JSON.parse(localStorage.getItem('gameState'));
       if (currentGameState.currentPlayerData.username === currentGameState.player1.username) {
@@ -442,7 +466,7 @@ function PLAY() {
          currentGameState = JSON.parse(localStorage.getItem('gameState'));
 
          // Check if player gets another turn
-         if (currentGameState.currentPlayerData.category === currentGameState.extraTile.category) {
+         if (currentGameState.currentPlayerData.category === currentGameState.extraTile.category || currentGameState.extraTile.category === "extra") {
             showCustomAlert(`Player ${currentGameState.currentPlayer} gets another turn!`);
          } else {
             try {
