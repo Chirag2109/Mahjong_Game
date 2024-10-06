@@ -99,7 +99,7 @@ function undoLastMove() {
 function generateTiles() {
    let set1 = document.getElementById('set1');
    let set2 = document.getElementById('set2');
-   let extraTileContainer = document.getElementById('extra');
+   let extraTileContainer = document.getElementById('extraTile');
 
    let temp = [];
    symbols.forEach(symbol => {
@@ -402,14 +402,14 @@ function PLAY() {
       let tiles = JSON.parse(localStorage.getItem('tiles'));
       let users = JSON.parse(localStorage.getItem('users'));
       let currentGameState = JSON.parse(localStorage.getItem('gameState'));
-
+   
       if (currentGameState.player1.count >= 36 && !tiles.set1Array.some(tile => tile.category === "extra")) {
          if (users[currentGameState.player1.username] && users[currentGameState.player2.username]) {
             users[currentGameState.player1.username].score += currentGameState.player2.score;
             users[currentGameState.player2.username].score /= 2;
             localStorage.setItem('users', JSON.stringify(users));
          }
-         alert(`${currentGameState.player1.username} wins!`);
+         displayGameEndModal(`${currentGameState.player1.username} wins!`);
          return true;
       } else if (currentGameState.player2.count >= 36 && !tiles.set2Array.some(tile => tile.category === "extra")) {
          if (users[currentGameState.player1.username] && users[currentGameState.player2.username]) {
@@ -417,12 +417,41 @@ function PLAY() {
             users[currentGameState.player1.username].score /= 2;
             localStorage.setItem('users', JSON.stringify(users));
          }
-         alert(`${currentGameState.player2.username} wins!`);
+         displayGameEndModal(`${currentGameState.player2.username} wins!`);
          return true;
       } else {
          return false;
       }
    }
+   
+   function displayGameEndModal(message) {
+      const modal = document.getElementById('game-end-modal');
+      const messageElement = document.getElementById('game-end-message');
+      const playAgainBtn = document.getElementById('play-again-btn');
+      const leaderboardBtn = document.getElementById('leaderboard-btn');
+      const closeBtn = document.getElementById('close-btn');
+   
+      messageElement.textContent = message;
+      modal.classList.remove('hidden');
+   
+      // Add event listeners for buttons
+      playAgainBtn.onclick = function() {
+         modal.classList.add('hidden');
+         // Logic to restart the game
+         localStorage.removeItem('tiles');
+         PLAY();
+      };
+   
+      leaderboardBtn.onclick = function() {
+         modal.classList.add('hidden');
+         // Redirect to the leaderboard page
+         window.location.href = 'leader.html';
+      };
+   
+      closeBtn.onclick = function() {
+         modal.classList.add('hidden');
+      };
+   }   
 
    // Helper function to update the player count
    function updatePlayerCount() {

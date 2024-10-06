@@ -24,16 +24,20 @@ body {
 /* Navbar styling */
 .navbar {
     background-color: var(--imperial-red);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     position: fixed;
     width: 100%;
-    height: 30px;
+    height: 50px;
 }
 
 .players {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    padding-top: 40px;
+    padding-top: 75px;
+    height: 200px;
 }
 
 /* Container for navbar elements */
@@ -48,15 +52,17 @@ body {
     cursor: pointer;
     border: none;
     background-color: transparent;
-    margin-left: 10px; /* Consistent spacing */
+    margin-left: 10px;
+    /* Consistent spacing */
     outline: none;
     transition: background-color 0.3s ease;
 }
 
 /* Image styling for buttons */
 .navbar-button img {
-    width: 24px;
-    height: 24px;
+    margin-left: 30px;
+    width: 30px;
+    height: 30px;
 }
 
 /* Hover effects for buttons */
@@ -71,21 +77,22 @@ body {
 }
 
 .avatar img {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     border: 3px solid var(--gold);
 }
 
 .player-name {
-    font-size: 1.2em;
+    font-size: 1.5em;
     color: var(--imperial-red);
     margin-top: 10px;
 }
 
 /* Table Layout */
 #Table {
-    margin-top: 20px; /* Spacing from player avatars */
+    margin-top: 20px;
+    /* Spacing from player avatars */
 }
 
 .table-top {
@@ -195,8 +202,13 @@ body {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Custom alert box styling */
@@ -213,4 +225,98 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     transition: opacity 0.3s ease-in-out;
+}
+
+.game-end-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.game-end-modal.hidden {
+    display: none;
+}
+
+.game-end-content {
+    background-color: var(--ivory);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.game-end-content h2 {
+    margin-bottom: 20px;
+}
+
+.game-end-actions button {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: var(--imperial-red);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 1em;
+}
+
+.game-end-actions button:hover {
+    background-color: var(--crimson);
+}
+
+@media (max-width: 768px) {
+    body {
+        background-size: contain;
+        overflow-y: scroll;
+    }
+
+    .players {
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+        padding-top: 50px;
+    }
+
+    .navbar {
+        height: 40px;
+    }
+
+    .navbar-button img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .avatar img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .player-name {
+        font-size: 1.2em;
+    }
+
+    .tile-set {
+        grid-template-columns: repeat(3, 60px);
+        grid-template-rows: repeat(6, 80px);
+        gap: 8px;
+    }
+
+    .extra-tile, .tile {
+        width: 60px;
+        height: 80px;
+        font-size: 80px;
+    }
+
+    .game-end-content {
+        width: 80%;
+        padding: 20px;
+    }
 }

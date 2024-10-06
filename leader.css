@@ -1,0 +1,189 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap");
+
+:root {
+    --imperial-red: #C8102E;
+    --gold: #FFD700;
+    --jade-green: #009B77;
+    --chinese-black: #101820;
+    --ivory: #FFFFF0;
+    --crimson: #DC143C;
+    --rich-burgundy: #6D2C91;
+}
+
+body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background-image: url("/wallpaper/th.jpeg");
+    background-size: cover;
+    color: var(--chinese-black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.leaderboard-container {
+    background-color: var(--rich-burgundy);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    width: 500px;
+    text-align: center;
+    color: var(--ivory);
+}
+
+h1 {
+    font-family: 'ZCOOL XiaoWei', serif;
+    margin-bottom: 30px;
+    color: var(--gold);
+    font-size: 2.5em;
+}
+
+/* Podium styling */
+.podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 40px;
+}
+
+.rank {
+    text-align: center;
+    background-color: var(--jade-green);
+    padding: 20px;
+    width: 140px;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    position: relative;
+    animation: bounce 2s infinite;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+/* Specific podium ranks */
+.rank-1 {
+    background-color: var(--gold);
+    height: 220px;
+    transform: translateY(-30px) rotateX(10deg);
+}
+
+.rank-2 {
+    background-color: var(--crimson);
+    height: 180px;
+    transform: rotateX(10deg);
+}
+
+.rank-3 {
+    background-color: var(--jade-green);
+    height: 160px;
+    transform: translateY(30px) rotateX(10deg);
+}
+
+.podium .rank h2 {
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.rank:hover {
+    transform: translateY(-15px) rotateX(0deg);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Leaderboard table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+th, td {
+    padding: 15px;
+    border: 1px solid var(--imperial-red);
+    text-align: center;
+    color: var(--ivory);
+    transition: background-color 0.3s ease;
+}
+
+th {
+    background-color: var(--imperial-red);
+    font-size: 1.2em;
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--jade-green);
+}
+
+tbody tr:hover {
+    background-color: var(--crimson);
+    transform: scale(1.05);
+}
+
+/* Podium bounce animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0) rotateX(10deg);
+    }
+    50% {
+        transform: translateY(-10px) rotateX(10deg);
+    }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        overflow-y: scroll;
+    }
+
+    .leaderboard-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .podium {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .rank {
+        width: 100px;
+        padding: 15px;
+    }
+
+    .rank-1 {
+        height: 180px;
+        transform: translateY(-20px);
+    }
+
+    .rank-2 {
+        height: 150px;
+    }
+
+    .rank-3 {
+        height: 130px;
+        transform: translateY(20px);
+    }
+
+    table {
+        font-size: 0.9em;
+    }
+}

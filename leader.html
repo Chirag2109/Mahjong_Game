@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/logo/logo.png" type="image/png">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="leader.css">
+</head>
+<body>
+    <div class="leaderboard-container">
+        <h1>Leaderboard</h1>
+
+        <!-- Winners' podium -->
+        <div class="podium">
+            <div id="second" class="rank rank-2">
+                <h2>Second</h2>
+                <p id="second-name"></p>
+                <p id="second-score"></p>
+            </div>
+            <div id="first" class="rank rank-1">
+                <h2>First</h2>
+                <p id="first-name"></p>
+                <p id="first-score"></p>
+            </div>
+            <div id="third" class="rank rank-3">
+                <h2>Third</h2>
+                <p id="third-name"></p>
+                <p id="third-score"></p>
+            </div>
+        </div>
+
+        <!-- Leaderboard table for users after the top 3 -->
+        <table id="leaderboard">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Leaderboard data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="leader.js"></script>
+</body>
+</html>

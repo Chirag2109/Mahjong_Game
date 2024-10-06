@@ -24,6 +24,9 @@
             <button id="undoButton" class="navbar-button">
                 <img src="/logo/undo.png" alt="Undo" id="undo">
             </button>
+            <button id="leaderBtn" class="navbar-button" onclick="window.location.href='leader.html'">
+                <img src="/logo/podium.png" alt="leader" id="leader">
+            </button>
         </div>
     </nav>
     <div class="players">
@@ -54,6 +57,16 @@
         </div>
     </div>
 
+    <div id="game-end-modal" class="game-end-modal hidden">
+        <div class="game-end-content">
+            <h2 id="game-end-message"></h2>
+            <div class="game-end-actions">
+                <button id="play-again-btn">Play Again</button>
+                <button id="leaderboard-btn">See Leaderboard</button>
+                <button id="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
     <div id="loader" class="loader"></div>
     <div id="customAlert" class="custom-alert"></div>
     <script src="game.js"></script>

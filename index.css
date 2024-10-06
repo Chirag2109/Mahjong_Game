@@ -61,3 +61,26 @@ button {
 button:hover {
     background-color: var(--imperial-red);
 }
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+        -webkit-text-stroke-width: 1px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+
+    .entrance {
+        margin-top: 80px;
+        padding: 15px;
+    }
+}

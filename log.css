@@ -152,3 +152,48 @@ button:hover {
     z-index: 1000;
     transition: opacity 0.3s ease-in-out;
 }
+
+/* Responsive styles for mobile screens */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+        background-size: contain;
+        min-height: auto;
+        overflow-y: scroll; /* Allow scrolling on mobile */
+    }
+
+    .container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .player-section {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .vs-symbol {
+        font-size: 2.5rem;
+        margin: 20px 0;
+    }
+
+    #play-button {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+
+    .avatar img {
+        width: 60px;
+        height: 60px;
+    }
+
+    input {
+        width: 90%;
+        font-size: 0.9rem;
+    }
+
+    button {
+        font-size: 1rem;
+        padding: 8px;
+    }
+}
