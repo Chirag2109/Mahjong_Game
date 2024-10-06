@@ -33,7 +33,7 @@ Welcome to the Mahjong Game! This project is a web-based implementation of the c
 3. Open the `index.html` file in your web browser to start playing.
 
 ## Gameplay
-Mahjong is a tile-based game that involves skill, strategy, and calculation. The objective is to clear the board by matching tiles in pairs. Players take turns to draw and discard tiles while aiming to form a complete set.
+Mahjong is a tile-based game that involves skill, strategy, and calculation. The objective is to clear the board by matching tiles. Players take turns to draw and discard tiles while aiming to form a complete set.
 
 ## How to Play
 1. **Starting the Game**: Click on the "Start" button on the main entrance screen.
@@ -47,6 +47,3 @@ Contributions are welcome! If you have suggestions or improvements, please fork 
 ---
 
 Enjoy playing Mahjong!
-
-### Customization:
-Feel free to modify any sections, especially the **Gameplay** and **How to Play** sections, to better reflect the rules or features of your specific Mahjong game implementation. Adding images or screenshots in the README can also enhance its appeal and clarity.
