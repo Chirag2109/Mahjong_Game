@@ -12,8 +12,19 @@
         <div class="entrance">
             <h1>Welcome to the Mahjong Board!</h1>
             <button id="play">Start</button>
+            <button id="demo-video">Watch Demo</button>
         </div>
     </div>
+
+    <!-- Video section -->
+    <div class="video-container hidden">
+        <video id="demoVideo" height="100%" controls>
+            <source src="/video/Screen Recording 2024-08-31 111242.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <button id="close-video">Close Video</button>
+    </div>
+
     <script src="index.js"></script>
 </body>
 </html>
