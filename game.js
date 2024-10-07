@@ -317,7 +317,7 @@ const table = document.getElementById('Table');
 function updateMuteStatus() {
    const isMuted = localStorage.getItem('audioMuted') === 'true';
    audio.muted = isMuted;
-   muteIcon.src = isMuted ? '/logo/mute.png' : '/logo/sound.png';
+   muteIcon.src = isMuted ? 'logo/mute.png' : 'logo/sound.png';
    muteIcon.alt = isMuted ? 'Unmute' : 'Mute';
 }
 
