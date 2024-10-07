@@ -16,7 +16,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Great Vibes', 'Dancing Script', cursive;
-    background-image: url("/wallpaper/game.jpeg");
+    background-image: url("wallpaper/game.jpeg");
     background-size: cover;
     overflow: hidden;
 }
