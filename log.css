@@ -9,7 +9,7 @@
 }
 
 body {
-    background-image: url("/wallpaper/log.jpeg");
+    background-image: url("wallpaper/log.jpeg");
     background-size: cover;
     font-family: 'Great Vibes', 'Dancing Script', cursive;
     margin: 0;
