@@ -336,7 +336,7 @@ function loadPlayerNames() {
 // Event listener to toggle mute
 muteButton.addEventListener('click', () => {
    audio.muted = !audio.muted;
-   muteIcon.src = audio.muted ? '/logo/mute.png' : '/logo/sound.png';
+   muteIcon.src = audio.muted ? 'logo/mute.png' : 'logo/sound.png';
    muteIcon.alt = audio.muted ? 'Unmute' : 'Mute';
 
    // Save the mute status to localStorage
