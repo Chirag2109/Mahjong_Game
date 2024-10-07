@@ -13,7 +13,7 @@
 
 body {
     font-family: 'Noto Sans SC', sans-serif;
-    background-image: url("/wallpaper/th.jpeg");
+    background-image: url("wallpaper/th.jpeg");
     background-size: cover;
     color: var(--chinese-black);
     display: flex;
